@@ -1,6 +1,6 @@
 {
-  "name": "cdp-node-backend-template",
-  "version": "0.1.0",
+  "name": "disinfectant-backend",
+  "version": "0.0.0",
   "description": "CDP Backend Template",
   "main": "src/index.js",
   "engines": {

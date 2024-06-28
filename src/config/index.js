@@ -17,7 +17,7 @@ const config = convict({
   serviceName: {
     doc: 'Api Service Name',
     format: String,
-    default: 'CDP Node.js Backend Template'
+    default: 'disinfectant-backend'
   },
   root: {
     doc: 'Project root',
@@ -54,7 +54,7 @@ const config = convict({
   mongoDatabase: {
     doc: 'database for mongodb',
     format: String,
-    default: 'cdp-node-backend-template',
+    default: 'disinfectant-backend',
     env: 'MONGO_DATABASE'
   },
   httpProxy: {
