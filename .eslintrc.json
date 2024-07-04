@@ -21,7 +21,13 @@
   },
   "plugins": ["prettier", "jest", "jest-formatting"],
   "rules": {
-    "prettier/prettier": "error",
+    "prettier/prettier":[ "error",
+    {
+      "singleQuote": true,
+         "parser": "flow" ,
+         "prettier/prettier": "error"
+    }
+  ],
     "no-console": "error"
   },
   "ignorePatterns": [".server", ".public", "src/__fixtures__", "coverage"]
