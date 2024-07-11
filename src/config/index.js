@@ -70,6 +70,36 @@ const config = convict({
     nullable: true,
     default: null,
     env: 'CDP_HTTPS_PROXY'
+  },
+  azTenantId: {
+    doc: 'The azure tenant ID',
+    format: String,
+    required: false,
+    default: null,
+    env: 'AZ_TENANT_ID',
+    sensitive: true
+  },
+  azClientId: {
+    doc: 'The azure client ID',
+    format: String,
+    required: false,
+    default: null,
+    env: 'AZ_CLIENT_ID',
+    sensitive: true
+  },
+  azClientSecret: {
+    doc: 'The azure client secret',
+    format: String,
+    required: false,
+    default: null,
+    env: 'AZ_CLIENT_SECRET',
+    sensitive: true
+  },
+  dataverseUri: {
+    doc: 'The power apps dataverse URI',
+    format: String,
+    default: 'https://org5d77c363.api.crm11.dynamics.com/',
+    env: 'DATAVERSE_URI'
   }
 })
 

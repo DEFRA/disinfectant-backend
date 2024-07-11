@@ -1,22 +1,27 @@
 import contactsSchema from '../schema/contacts'
 import organizationsSchema from '../schema/organizations'
 import uploadSchema from '../schema/upload'
+import disinfectantApprovedListSchema from '../schema/disinfectantApprovedList'
 
 export const mongoCollections = {
   contact: 'Contact',
-  submission: 'Submission'
+  submission: 'Submission',
+  disinfectantApprovedListSI: 'DisinfectantApprovedListSI'
 }
 
 export const schemaMapping = {
   contact: contactsSchema,
   organization: organizationsSchema,
-  upload: uploadSchema
+  upload: uploadSchema,
+  disinfectantApprovedList: disinfectantApprovedListSchema,
 }
 
 export const dataverseEntities = {
   contact: 'contacts',
   organization: 'nm_organisations',
-  developmentSite: 'nm_developmentsites'
+  developmentSite: 'nm_developmentsites',
+  disinfectantApprovedList: 'dsf_approvalslistsis'
+
 }
 
 export const typeOfDeveloperValues = {

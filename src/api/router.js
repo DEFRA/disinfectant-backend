@@ -1,5 +1,8 @@
 import { health } from '~/src/api/health'
 import { example } from '~/src/api/example'
+import { dataverse } from '~/src/api/dataverse'
+import { disinfectantApprovedListSI } from '~/src/api/tests'
+import { crud } from '~/src/api/curd-transaction/index'
 
 const router = {
   plugin: {
@@ -10,6 +13,7 @@ const router = {
 
       // Application specific routes, add your own routes here.
       await server.register([example])
+      await server.register([dataverse, disinfectantApprovedListSI, crud])
     }
   }
 }
