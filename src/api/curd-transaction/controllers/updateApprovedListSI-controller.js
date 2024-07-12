@@ -1,4 +1,4 @@
-import Joi from '~/node_modules/joi/lib/index'
+import Joi from 'joi'
 import { buildErrorDetails } from '~/src/helpers/build-error-details'
 import { mongoCollections, schemaMapping } from '~/src/helpers/constants'
 import { updateDocumentInArray } from '~/src/helpers/databaseTransaction'
