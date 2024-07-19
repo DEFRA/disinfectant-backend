@@ -12,7 +12,8 @@ const router = {
       await server.register([health])
 
       // Application specific routes, add your own routes here.
-      await server.register([example])
+     // await server.register([example])
+    // await server.register([dataverse])
       await server.register([dataverse, disinfectantApprovedListSI, crud])
     }
   }

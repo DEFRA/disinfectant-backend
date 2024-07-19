@@ -17,6 +17,7 @@ import {
     getEntityMetadata,
     getOptionSetDefinition,
     updateData
+    
   } from '~/src/services/powerapps/dataverse'
   // import { config } from '~/src/config/index'
   import { proxyFetch } from '~/src/helpers/proxy-fetch'
@@ -63,9 +64,50 @@ import {
   const readController = {
     handler: async (request, h) => {
       try {
-        const { entity } = request.params
-        const accounts = await getData(entity)
-        return h.response({ message: 'success', data: accounts }).code(200)
+       const { entity } = request.params
+     
+        const approvedDisinfectants=await getData(entity)
+        //Code to get unique Chemical Groups
+        const combinedChemicalGroups = approvedDisinfectants.value.filter(item=>item.dsf_chemicalgroups!==null).map(item=>item.dsf_chemicalgroups.split(';')).reduce((acc,val)=>acc.concat(val),[])
+       const uniqueChemicalGroups=[...new Set(combinedChemicalGroups.filter(value=>value.trim()!==''))]
+        console.log(uniqueChemicalGroups);
+        //Code to update property name @odata.count to count
+        approvedDisinfectants.count=approvedDisinfectants['@odata.count']
+        delete approvedDisinfectants['@odata.count']
+      
+       //const newJson=updatedJson
+       approvedDisinfectants.chemicalGroups=uniqueChemicalGroups
+      // console.log(newJson.val)
+      //Code to update the properties name
+      approvedDisinfectants.value.forEach(element => {
+        element.disInfectantName =element.dsf_disinfectantname
+        delete element.dsf_disinfectantname
+        element.companyName =element.dsf_companyname
+        delete element.dsf_companyname
+        element.companyAddress =element.dsf_companyaddress
+        delete element.dsf_companyaddress
+        element.chemicalGroups =element.dsf_chemicalgroups
+        delete element.dsf_chemicalgroups
+        element.fmdo =element.dsf_fm_approveddilution_formula
+        delete element.dsf_fm_approveddilution_formula
+        element.svdo =element.dsf_sv_approveddilution_formula
+        delete element.dsf_sv_approveddilution_formula
+        element.dop =element.dsf_dp_approveddilution_formula
+        delete element.dsf_dp_approveddilution_formula
+        element.tbo =element.dsf_tb_approveddilution_formula
+        delete element.dsf_tb_approveddilution_formula
+        element.go =element.dsf_go_approveddilution_formula
+        delete element.dsf_go_approveddilution_formula
+
+      });
+      //Code to Update propert value to disInfectants
+      approvedDisinfectants.disInfectants=approvedDisinfectants['value']
+      delete approvedDisinfectants['value']
+        
+        const currentTime = new Date(Date.now())
+        approvedDisinfectants.lastModifiedDateAndTime =currentTime
+        console.log(approvedDisinfectants)
+        return h.response({ message: 'success', data: approvedDisinfectants }).code(200)
       } catch (error) {
         h.response({ error: error.message }).code(500)
       }

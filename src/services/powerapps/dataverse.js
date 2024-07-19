@@ -6,6 +6,7 @@ import { createLogger } from '~/src/helpers/logging/logger'
 const resourceUrl = config.get('dataverseUri')
 const apiBaseUrl = `${resourceUrl}api/data/v9.1`
 const logger = createLogger()
+const additionaParameters =`?$count=true&$select=dsf_disinfectantname,dsf_companyname,dsf_companyaddress,dsf_chemicalgroups,dsf_fm_approveddilution_formula,dsf_sv_approveddilution_formula,dsf_dp_approveddilution_formula,dsf_tb_approveddilution_formula,dsf_go_approveddilution_formula,dsf_approvalslistsiid`
 
 const getHeaders = async () => {
   const token = await getAccessToken()
@@ -16,13 +17,16 @@ const getHeaders = async () => {
     'OData-MaxVersion': '4.0',
     'OData-Version': '4.0',
     Prefer: 'return=representation'
+    //'Preference-Applied': 'return=representation,odata.track-changes'
+    
+   
   }
 }
 
 const getData = async (entity) => {
   try {
     const headers = await getHeaders()
-    const response = await fetchProxyWrapper(`${apiBaseUrl}/${entity}`, {
+    const response = await fetchProxyWrapper(`${apiBaseUrl}/${entity}${additionaParameters}`, {
       headers
     })
     return response.body
@@ -136,5 +140,6 @@ export {
   deleteData,
   createTable,
   createColumn,
-  getEntityMetadata
+  getEntityMetadata,
+  
 }
