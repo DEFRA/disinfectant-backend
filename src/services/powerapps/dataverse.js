@@ -140,6 +140,6 @@ export {
   deleteData,
   createTable,
   createColumn,
-  getEntityMetadata,
+  getEntityMetadata
   
 }
