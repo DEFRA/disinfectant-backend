@@ -110,9 +110,17 @@ import {
         const currentTime = new Date(Date.now())
         approvedDisinfectants.lastModifiedDateAndTime =currentTime
         console.log(approvedDisinfectants)
+     
         // call the mongo db method to create the collection
-        const collections = mongoCollections[collection]
-        const document = await createDocument(request.db, collections, approvedDisinfectants)
+        const collections = mongoCollections.disinfectantApprovedListSI
+        const documentsRead = await readAllDocuments(
+             request.db,
+             collections
+           )
+         if(documentsRead.length<=2) 
+         {
+          const document = await createDocument(request.db, collections, approvedDisinfectants)
+         } 
         return h.response({ message: 'success', data: approvedDisinfectants }).code(200)
       } catch (error) {
         h.response({ error: error.message }).code(500)
