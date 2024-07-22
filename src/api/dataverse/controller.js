@@ -11,6 +11,7 @@ import {
   import organizationNContact from '~/src/schema/organizationNContact'
   import developmentSite from '~/src/schema/developmentSite'
   import { getAccessToken } from '~/src/services/powerapps/auth'
+  import { createDocument } from '~/src/helpers/databaseTransaction'
   import {
     createData,
     getData,
@@ -23,6 +24,7 @@ import {
   import { proxyFetch } from '~/src/helpers/proxy-fetch'
   import { createLogger } from '~/src/helpers/logging/logger'
   import { processOptions } from './helpers/process-options'
+  import { mongoCollections, schemaMapping } from '~/src/helpers/constants'
   
   const logger = createLogger()
   
@@ -65,6 +67,7 @@ import {
     handler: async (request, h) => {
       try {
        const { entity } = request.params
+       const collection = 'DisinfectantApprovedListSI'
      
         const approvedDisinfectants=await getData(entity)
         //Code to get unique Chemical Groups
@@ -107,6 +110,9 @@ import {
         const currentTime = new Date(Date.now())
         approvedDisinfectants.lastModifiedDateAndTime =currentTime
         console.log(approvedDisinfectants)
+        // call the mongo db method to create the collection
+        const collections = mongoCollections[collection]
+        const document = await createDocument(request.db, collections, approvedDisinfectants)
         return h.response({ message: 'success', data: approvedDisinfectants }).code(200)
       } catch (error) {
         h.response({ error: error.message }).code(500)
