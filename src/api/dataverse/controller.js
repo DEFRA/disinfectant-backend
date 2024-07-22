@@ -74,10 +74,10 @@ import {
         const combinedChemicalGroups = approvedDisinfectants.value.filter(item=>item.dsf_chemicalgroups!==null).map(item=>item.dsf_chemicalgroups.split(';')).reduce((acc,val)=>acc.concat(val),[])
        const uniqueChemicalGroups=[...new Set(combinedChemicalGroups.filter(value=>value.trim()!==''))]
         console.log(uniqueChemicalGroups);
-        //Code to update property name @odata.count to count
-        approvedDisinfectants.count=approvedDisinfectants['@odata.count']
-        delete approvedDisinfectants['@odata.count']
-      
+        //Code to update property name @odata.deltaLink to deltaLink
+        approvedDisinfectants.deltaLink=approvedDisinfectants['@odata.deltaLink']
+        delete approvedDisinfectants['@odata.deltaLink']
+        approvedDisinfectants.count=approvedDisinfectants.value.length
        //const newJson=updatedJson
        approvedDisinfectants.chemicalGroups=uniqueChemicalGroups
       // console.log(newJson.val)
