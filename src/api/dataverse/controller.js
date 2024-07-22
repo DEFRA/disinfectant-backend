@@ -11,7 +11,7 @@ import {
   import organizationNContact from '~/src/schema/organizationNContact'
   import developmentSite from '~/src/schema/developmentSite'
   import { getAccessToken } from '~/src/services/powerapps/auth'
-  import { createDocument } from '~/src/helpers/databaseTransaction'
+  import { createDocument,readAllDocuments } from '~/src/helpers/databaseTransaction'
   import {
     createData,
     getData,
@@ -25,6 +25,7 @@ import {
   import { createLogger } from '~/src/helpers/logging/logger'
   import { processOptions } from './helpers/process-options'
   import { mongoCollections, schemaMapping } from '~/src/helpers/constants'
+  import { schedule } from 'node-cron'
   
   const logger = createLogger()
   
@@ -63,6 +64,73 @@ import {
     }
   }
   
+  const readDataverseController = {
+    handler: async (request, h) => {
+      try {
+      const currentTime = new Date(Date.now())
+       const { entity } = request.params
+       const collection = 'DisinfectantApprovedListSI'
+       logger.info("success scheduled job starts: "+ currentTime)
+        const approvedDisinfectants=await getData(entity)
+        //Code to get unique Chemical Groups
+        const combinedChemicalGroups = approvedDisinfectants.value.filter(item=>item.dsf_chemicalgroups!==null).map(item=>item.dsf_chemicalgroups.split(';')).reduce((acc,val)=>acc.concat(val),[])
+       const uniqueChemicalGroups=[...new Set(combinedChemicalGroups.filter(value=>value.trim()!==''))]
+        console.log(uniqueChemicalGroups);
+        //Code to update property name @odata.deltaLink to deltaLink
+        approvedDisinfectants.deltaLink=approvedDisinfectants['@odata.deltaLink']
+        delete approvedDisinfectants['@odata.deltaLink']
+        approvedDisinfectants.count=approvedDisinfectants.value.length
+       //const newJson=updatedJson
+       approvedDisinfectants.chemicalGroups=uniqueChemicalGroups
+      // console.log(newJson.val)
+      //Code to update the properties name
+      approvedDisinfectants.value.forEach(element => {
+        element.disInfectantName =element.dsf_disinfectantname
+        delete element.dsf_disinfectantname
+        element.companyName =element.dsf_companyname
+        delete element.dsf_companyname
+        element.companyAddress =element.dsf_companyaddress
+        delete element.dsf_companyaddress
+        element.chemicalGroups =element.dsf_chemicalgroups
+        delete element.dsf_chemicalgroups
+        element.fmdo =element.dsf_fm_approveddilution_formula
+        delete element.dsf_fm_approveddilution_formula
+        element.svdo =element.dsf_sv_approveddilution_formula
+        delete element.dsf_sv_approveddilution_formula
+        element.dop =element.dsf_dp_approveddilution_formula
+        delete element.dsf_dp_approveddilution_formula
+        element.tbo =element.dsf_tb_approveddilution_formula
+        delete element.dsf_tb_approveddilution_formula
+        element.go =element.dsf_go_approveddilution_formula
+        delete element.dsf_go_approveddilution_formula
+
+      });
+      //Code to Update propert value to disInfectants
+      approvedDisinfectants.disInfectants=approvedDisinfectants['value']
+      delete approvedDisinfectants['value']
+        
+       
+        approvedDisinfectants.lastModifiedDateAndTime =currentTime
+        console.log(approvedDisinfectants)
+     
+        // call the mongo db method to create the collection
+        const collections = mongoCollections.disinfectantApprovedListSI
+        const documentsRead = await readAllDocuments(
+             request.db,
+             collections
+           )
+         if(documentsRead.length<=2) 
+         {
+          const document = await createDocument(request.db, collections, approvedDisinfectants)
+         } 
+         logger.info("success scheduled job ends: "+ currentTime)
+       // return h.response({ message: 'success', data: approvedDisinfectants }).code(200)
+      } catch (error) {
+        h.response({ error: error.message }).code(500)
+      }
+    }
+  }
+
   const readController = {
     handler: async (request, h) => {
       try {
@@ -121,7 +189,7 @@ import {
          {
           const document = await createDocument(request.db, collections, approvedDisinfectants)
          } 
-        return h.response({ message: 'success', data: approvedDisinfectants }).code(200)
+       return h.response({ message: 'success', data: approvedDisinfectants }).code(200)
       } catch (error) {
         h.response({ error: error.message }).code(500)
       }
@@ -328,12 +396,13 @@ import {
   
   export {
     authController,
-    readController,
+    readDataverseController,
     postController,
     getEntitySchema,
     saveOrganizationNContact,
     saveDevelopmentSite,
     testProxy,
     readOptionsController,
-    readEntityAsOptionsController
+    readEntityAsOptionsController,
+    readController
   }

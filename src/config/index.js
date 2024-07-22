@@ -100,7 +100,13 @@ const config = convict({
     format: String,
     default: 'https://org5d77c363.api.crm11.dynamics.com/',
     env: 'DATAVERSE_URI'
-  }
+  },
+  disinfectantSchedule: {
+    doc: 'How often to poll the disinfectant data (cron format)',
+    format: String, // TODO: maybe custom validate this
+    default: '*/5 * * * *',
+    env: 'Disinfectants_SCHEDULE'
+  },
 })
 
 config.validate({ allowed: 'strict' })
