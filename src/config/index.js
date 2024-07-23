@@ -104,7 +104,7 @@ const config = convict({
   disinfectantSchedule: {
     doc: 'How often to poll the disinfectant data (cron format)',
     format: String, // TODO: maybe custom validate this
-    default: '*/5 * * * *',
+    default: '0 0 * * *',
     env: 'Disinfectants_SCHEDULE'
   },
 })
