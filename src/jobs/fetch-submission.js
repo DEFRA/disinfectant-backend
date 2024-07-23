@@ -1,7 +1,6 @@
 // Import the createLogger function to set up logging
 import { createLogger } from '../helpers/logging/logger'
 // Import the jobManager to manage scheduled jobs
-import jobManager from '../helpers/jobs/job-manager'
 import { schedule } from 'node-cron'
 import { readDataverseController } from '../api/dataverse/controller'
 import { config } from '~/src/config'
