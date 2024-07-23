@@ -111,6 +111,7 @@ import {
         
        
         approvedDisinfectants.lastModifiedDateAndTime =currentTime
+        logger.info("Json data from dataverse: "+ JSON.stringify(approvedDisinfectants))
         console.log(approvedDisinfectants)
      
         // call the mongo db method to create the collection
@@ -122,6 +123,7 @@ import {
          if(documentsRead.length<=2) 
          {
           const document = await createDocument(request.db, collections, approvedDisinfectants)
+          logger.info("success creating the Mongo Collection: "+ JSON.stringify(document))
          } 
          logger.info("success scheduled job ends: "+ currentTime)
        // return h.response({ message: 'success', data: approvedDisinfectants }).code(200)
