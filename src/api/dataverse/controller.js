@@ -203,10 +203,56 @@ const readDataverseDeltaController = {
             collectionsDeltaLink,
             oldCollection[0]._id
           )
+          const { entity } = request.params
+          
+          const approvedDisinfectantsUpdated = await getData(entity)
+          const combinedChemicalGroups = approvedDisinfectantsUpdated.value
+        .filter((item) => item.dsf_chemicalgroups !== null)
+        .map((item) => item.dsf_chemicalgroups.split(';').map(e=>e.trim()))
+        .reduce((acc, val) => acc.concat(val), [])
+      const uniqueChemicalGroups = [
+        ...new Set(
+          combinedChemicalGroups.filter((value) => value.trim() !== '')
+        )
+      ]
+      // console.log(uniqueChemicalGroups)
+      // Code to update property name @odata.deltaLink to deltaLink
+      approvedDisinfectants.deltaLink =
+        approvedDisinfectantsUpdated['@odata.deltaLink']
+      delete approvedDisinfectantsUpdated['@odata.deltaLink']
+      approvedDisinfectantsUpdated.count = approvedDisinfectantsUpdated.value.length
+      // const newJson=updatedJson
+      approvedDisinfectantsUpdated.chemicalGroups = uniqueChemicalGroups
+      // console.log(newJson.val)
+      // Code to update the properties name
+      approvedDisinfectantsUpdated.value.forEach((element) => {
+        element.disInfectantName = element.dsf_disinfectantname
+        delete element.dsf_disinfectantname
+        element.companyName = element.dsf_companyname
+        delete element.dsf_companyname
+        element.companyAddress = element.dsf_companyaddress
+        delete element.dsf_companyaddress
+        element.chemicalGroups = element.dsf_chemicalgroups
+        delete element.dsf_chemicalgroups
+        element.fmdo = element.dsf_fm_approveddilution_formula
+        delete element.dsf_fm_approveddilution_formula
+        element.svdo = element.dsf_sv_approveddilution_formula
+        delete element.dsf_sv_approveddilution_formula
+        element.dop = element.dsf_dp_approveddilution_formula
+        delete element.dsf_dp_approveddilution_formula
+        element.tbo = element.dsf_tb_approveddilution_formula
+        delete element.dsf_tb_approveddilution_formula
+        element.go = element.dsf_go_approveddilution_formula
+        delete element.dsf_go_approveddilution_formula
+      })
+      // Code to Update propert value to disInfectants
+      approvedDisinfectantsUpdated.disInfectants = approvedDisinfectantsUpdated.value
+      delete approvedDisinfectantsUpdated.value
+      approvedDisinfectantsUpdated.lastModifiedDateAndTime = currentTime
           const newdocument = await createDocument(
             request.db,
             collectionsDeltaLink,
-            approvedDisinfectants
+            approvedDisinfectantsUpdated
           )
         }
       
