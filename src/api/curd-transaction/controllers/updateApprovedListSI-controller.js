@@ -8,8 +8,8 @@ const updateApprovedListSIController = {
     const { entity, value } = request.payload
     const { collection } = request.params
     try {
-      const schema = Joi.array().items(schemaMapping[entity]);
-      const validationResult = schema.validate(value,{abortEarly:false});
+      const schema = Joi.array().items(schemaMapping[entity])
+      const validationResult = schema.validate(value, { abortEarly: false })
       if (validationResult?.error) {
         const errorDetails = buildErrorDetails(validationResult?.error?.details)
         request.logger.info(
