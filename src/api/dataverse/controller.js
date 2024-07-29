@@ -193,7 +193,21 @@ const readDataverseDeltaController = {
          
         }
         else{
-       
+          const oldCollection = await readOldCollection(
+            request.db,
+            collectionsDeltaLink
+          )
+  
+          const deleteOldCollectionvalue =await deleteOlderCollection(
+            request.db,
+            collectionsDeltaLink,
+            oldCollection[0]._id
+          )
+          const newdocument = await createDocument(
+            request.db,
+            collectionsDeltaLink,
+            approvedDisinfectants
+          )
         }
       
       // Code to get unique Chemical Groups
