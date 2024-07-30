@@ -5,9 +5,8 @@ const listController = {
   handler: async (request, h) => {
     const { collection } = request.params
     try {
-      const documents = await readLatestCollection
-      (
-    //  const documents = await readAllDocuments(
+      const documents = await readLatestCollection(
+        //  const documents = await readAllDocuments(
         request.db,
         mongoCollections[collection]
       )

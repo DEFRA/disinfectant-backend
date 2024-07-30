@@ -1,8 +1,5 @@
 /* eslint-disable no-console */
-import {
-
-  mongoCollections
-} from '~/src/helpers/constants'
+import { mongoCollections } from '~/src/helpers/constants'
 import { proxyAgent } from '~/src/helpers/proxy-agent'
 
 import { getAccessToken } from '~/src/services/powerapps/auth'
@@ -14,11 +11,7 @@ import {
   deleteOlderCollection,
   updateCollection
 } from '~/src/helpers/databaseTransaction'
-import {
-
-  getData
-
-} from '~/src/services/powerapps/dataverse'
+import { getData } from '~/src/services/powerapps/dataverse'
 // import { config } from '~/src/config/index'
 import { proxyFetch } from '~/src/helpers/proxy-fetch'
 import { createLogger } from '~/src/helpers/logging/logger'
@@ -73,7 +66,7 @@ const readDataverseController = {
       // Code to get unique Chemical Groups
       const combinedChemicalGroups = approvedDisinfectants.value
         .filter((item) => item.dsf_chemicalgroups !== null)
-        .map((item) => item.dsf_chemicalgroups.split(';').map(e => e.trim()))
+        .map((item) => item.dsf_chemicalgroups.split(';').map((e) => e.trim()))
         .reduce((acc, val) => acc.concat(val), [])
       const uniqueChemicalGroups = [
         ...new Set(
@@ -130,12 +123,8 @@ const readDataverseController = {
         logger.info(
           'success creating the Mongo Collection: ' + JSON.stringify(document)
         )
-      }
-      else {
-        const oldCollection = await readOldCollection(
-          request.db,
-          collections
-        )
+      } else {
+        const oldCollection = await readOldCollection(request.db, collections)
 
         const deleteOldCollectionvalue = await deleteOlderCollection(
           request.db,
@@ -149,7 +138,9 @@ const readDataverseController = {
         )
       }
       logger.info('success scheduled job ends: ' + currentTime)
-      return h.response({ message: 'success', data: approvedDisinfectants }).code(200)
+      return h
+        .response({ message: 'success', data: approvedDisinfectants })
+        .code(200)
     } catch (error) {
       h.response({ error: error.message }).code(500)
     }
@@ -159,12 +150,10 @@ const listDBController = {
   handler: async (request, h) => {
     const { collection } = request.params
     try {
-      const documents = await readLatestCollection
-        (
-
-          request.db,
-          mongoCollections[collection]
-        )
+      const documents = await readLatestCollection(
+        request.db,
+        mongoCollections[collection]
+      )
 
       return h.response({ message: 'success', documents }).code(200)
     } catch (error) {
@@ -195,12 +184,12 @@ const readDataverseDeltaController = {
           collectionsDeltaLink,
           latestCollection[0]._id,
           approvedDisinfectants['@odata.deltaLink']
-
         )
         //Update the properties of latest collection
-        return h.response({ message: 'success', data: updateCollectionValue }).code(200)
-      }
-      else {
+        return h
+          .response({ message: 'success', data: updateCollectionValue })
+          .code(200)
+      } else {
         const requestDb = {
           params: { entity: 'dsf_approvalslistsis' },
           db: request.db
@@ -210,7 +199,10 @@ const readDataverseDeltaController = {
         }
         // const responseData = await readDataverseController.handler(request, h)
         // console.warn('working',responseData)
-        const newCollection = await readDataverseController.handler(requestDb, h);
+        const newCollection = await readDataverseController.handler(
+          requestDb,
+          h
+        )
         return h.response({ message: 'success', data: newCollection }).code(200)
         /*  const oldCollection = await readOldCollection(
 
@@ -285,10 +277,8 @@ const readDataverseDeltaController = {
     }
   }*/
       }
-    }
-    catch (error) {
+    } catch (error) {
       h.response({ error: error.message }).code(500)
-
     }
   }
 }
@@ -366,13 +356,6 @@ const readController = {
     }
   }
 }
-
-
-
-
-
-
-
 
 export {
   authController,

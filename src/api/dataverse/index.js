@@ -1,11 +1,9 @@
 import {
   authController,
-
   testProxy,
   listDBController,
   readDataverseController,
-  readDataverseDeltaController,
-  
+  readDataverseDeltaController
 } from '~/src/api/dataverse/controller'
 
 const dataverse = {
@@ -38,14 +36,12 @@ const dataverse = {
           path: '/dataverse-readDeltaLink/{entity}',
           ...readDataverseDeltaController
         },
-       
+
         {
           method: 'GET',
           path: '/test-proxy',
           ...testProxy
         }
-       
-       
       ])
     }
   }

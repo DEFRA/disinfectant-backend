@@ -27,7 +27,7 @@ const disinfectantScheduler = async (server) => {
       const h = {
         response: (responseObject) => responseObject
       }
-       const responseData = await readDataverseController.handler(request, h)
+      const responseData = await readDataverseController.handler(request, h)
       // console.warn('working',responseData)
       //await readDataverseController.handler(request, h)
     })
@@ -39,8 +39,11 @@ const disinfectantScheduler = async (server) => {
       const h = {
         response: (responseObject) => responseObject
       }
-      const responseData = await readDataverseDeltaController.handler( request,h)
-     // await readDataverseDeltaController.handler(request, h)
+      const responseData = await readDataverseDeltaController.handler(
+        request,
+        h
+      )
+      // await readDataverseDeltaController.handler(request, h)
       // console.log(responseData)
     })
     return {

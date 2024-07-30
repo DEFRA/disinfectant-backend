@@ -20,12 +20,12 @@ const updateCollection = async (db, collectionName, id, document) => {
   try {
     const collection = db.collection(collectionName)
     const currentTime = new Date(Date.now())
-    
-  const matchedCount=  await collection.updateOne(
+
+    const matchedCount = await collection.updateOne(
       {
         _id: new ObjectId(id)
       },
-      { $set: {lastModifiedDateAndTime:currentTime,deltaLink:document }}
+      { $set: { lastModifiedDateAndTime: currentTime, deltaLink: document } }
     )
     if (matchedCount) {
       return await readDocument(db, collectionName, { _id: new ObjectId(id) })
@@ -45,12 +45,10 @@ const updateCollection = async (db, collectionName, id, document) => {
 const deleteOlderCollection = async (db, collectionName, id) => {
   try {
     const collection = db.collection(collectionName)
-     await collection.deleteOne(
-      {
-        _id: new ObjectId(id)
-      }
-    )
-   /* if (matchedCount) {
+    await collection.deleteOne({
+      _id: new ObjectId(id)
+    })
+    /* if (matchedCount) {
       
     } else {
       logger.error(

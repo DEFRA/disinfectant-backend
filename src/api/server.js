@@ -47,7 +47,7 @@ async function createServer() {
 
   // This plugin adds access to mongo by adding `db` to the server and request object.
   // Also adds an instance of mongoClient to just the server object.
-   await server.register({ plugin: mongoPlugin, options: {} })
+  await server.register({ plugin: mongoPlugin, options: {} })
 
   await server.register(router)
 
