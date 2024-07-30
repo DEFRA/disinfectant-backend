@@ -2,7 +2,7 @@ import {
   authController,
 
   testProxy,
- 
+  listDBController,
   readDataverseController,
   readDataverseDeltaController,
   
@@ -23,6 +23,11 @@ const dataverse = {
           path: '/dataverse-read/{entity}',
           ...readController
         },*/
+        {
+          method: 'GET',
+          path: '/list/{collection}',
+          ...listDBController
+        },
         {
           method: 'GET',
           path: '/dataverse-read/{entity}',

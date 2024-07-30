@@ -9,11 +9,11 @@ const crud = {
     name: 'crud',
     register: async (server) => {
       server.route([
-        {
+     /*   {
           method: 'GET',
           path: '/list/{collection}',
           ...listController
-        },
+        },*/
         {
           method: 'GET',
           path: '/read/{collection}/{id}',

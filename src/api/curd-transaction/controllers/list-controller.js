@@ -1,11 +1,13 @@
 import { mongoCollections } from '~/src/helpers/constants'
-import { readAllDocuments } from '~/src/helpers/databaseTransaction'
+import { readLatestCollection } from '~/src/helpers/databaseTransaction'
 
 const listController = {
   handler: async (request, h) => {
     const { collection } = request.params
     try {
-      const documents = await readAllDocuments(
+      const documents = await readLatestCollection
+      (
+    //  const documents = await readAllDocuments(
         request.db,
         mongoCollections[collection]
       )

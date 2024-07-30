@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import {
-  
+
   mongoCollections
 } from '~/src/helpers/constants'
 import { proxyAgent } from '~/src/helpers/proxy-agent'
@@ -15,9 +15,9 @@ import {
   updateCollection
 } from '~/src/helpers/databaseTransaction'
 import {
- 
+
   getData
-  
+
 } from '~/src/services/powerapps/dataverse'
 // import { config } from '~/src/config/index'
 import { proxyFetch } from '~/src/helpers/proxy-fetch'
@@ -155,6 +155,23 @@ const readDataverseController = {
     }
   }
 }
+const listDBController = {
+  handler: async (request, h) => {
+    const { collection } = request.params
+    try {
+      const documents = await readLatestCollection
+        (
+
+          request.db,
+          mongoCollections[collection]
+        )
+
+      return h.response({ message: 'success', documents }).code(200)
+    } catch (error) {
+      return h.response({ error: error.message }).code(500)
+    }
+  }
+}
 const readDataverseDeltaController = {
   handler: async (request, h) => {
     try {
@@ -193,7 +210,7 @@ const readDataverseDeltaController = {
         }
         // const responseData = await readDataverseController.handler(request, h)
         // console.warn('working',responseData)
-        const newCollection = await readDataverseController.handler(requestDb,h);
+        const newCollection = await readDataverseController.handler(requestDb, h);
         /*  const oldCollection = await readOldCollection(
             request.db,
             collectionsDeltaLink
@@ -358,9 +375,8 @@ const readController = {
 export {
   authController,
   readDataverseController,
-  
+  listDBController,
   testProxy,
-  
   readController,
   readDataverseDeltaController
 }
