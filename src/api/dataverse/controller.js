@@ -149,7 +149,7 @@ const readDataverseController = {
         )
       }
       logger.info('success scheduled job ends: ' + currentTime)
-      // return h.response({ message: 'success', data: approvedDisinfectants }).code(200)
+      return h.response({ message: 'success', data: approvedDisinfectants }).code(200)
     } catch (error) {
       h.response({ error: error.message }).code(500)
     }
@@ -198,7 +198,7 @@ const readDataverseDeltaController = {
 
         )
         //Update the properties of latest collection
-
+        return h.response({ message: 'success', data: updateCollectionValue }).code(200)
       }
       else {
         const requestDb = {
@@ -211,7 +211,9 @@ const readDataverseDeltaController = {
         // const responseData = await readDataverseController.handler(request, h)
         // console.warn('working',responseData)
         const newCollection = await readDataverseController.handler(requestDb, h);
+        return h.response({ message: 'success', data: newCollection }).code(200)
         /*  const oldCollection = await readOldCollection(
+
             request.db,
             collectionsDeltaLink
           )
