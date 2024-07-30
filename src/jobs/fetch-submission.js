@@ -2,40 +2,61 @@
 import { createLogger } from '../helpers/logging/logger'
 // Import the jobManager to manage scheduled jobs
 import { schedule } from 'node-cron'
-import { readDataverseController } from '../api/dataverse/controller'
+import {
+  readDataverseController,
+  readDataverseDeltaController
+} from '../api/dataverse/controller'
 import { config } from '~/src/config'
 
 // Create a logger instance for logging information
 const logger = createLogger()
 
 const disinfectantScheduler = async (server) => {
-    try {
-      logger.info({
-        data: 'This is from cron job scheduler'
+  try {
+    logger.info({
+      data: 'This is from cron job scheduler'
       //   jobs: jobManager.getJobs()
-      })
-  
-      logger.info('starting Disinfectant Scheduler')
-      schedule(config.get('disinfectantSchedule'), async () => {
-          const request={
-              params:{entity: 'dsf_approvalslistsis'},
-              db:server.db
-          }
+    })
+
+    logger.info('starting Disinfectant Scheduler')
+    schedule(config.get('disinfectantSchedule'), async () => {
+      const request = {
+        params: { entity: 'dsf_approvalslistsis' },
+        db: server.db
+      }
       const h = {
-          response:(responseObject)=>responseObject
+        response: (responseObject) => responseObject
       }
-      const responseData= await readDataverseController.handler(request,h)
-  })
-  
-      return {
-        data: 'This is from cron job scheduler'
+      const responseData = await readDataverseController.handler(request, h)
+      logger.info('This is from cron job scheduler', responseData)
+      // console.warn('working',responseData)
+      // await readDataverseController.handler(request, h)
+    })
+    schedule(config.get('disinfectantDeltaSchedule'), async () => {
+      const request = {
+        params: { entity: 'deltaLink' },
+        db: server.db
+      }
+      const h = {
+        response: (responseObject) => responseObject
+      }
+      const responseData = await readDataverseDeltaController.handler(
+        request,
+        h
+      )
+      logger.info('This is from cron job scheduler', responseData)
+      // await readDataverseDeltaController.handler(request, h)
+      // console.log(responseData).
+    })
+    return {
+      data: 'This is from cron job scheduler'
       //   jobs: jobManager.getJobs()
-      }
-    } catch (error) {
-      logger.info(error)
-      throw error
     }
+  } catch (error) {
+    logger.info(error)
+    throw error
   }
+}
 
 /**
  * Fetches submission data as part of a cron job scheduler.
@@ -47,24 +68,23 @@ const fetchSubmissions = async () => {
   try {
     logger.info({
       data: 'This is from cron job scheduler'
-    //   jobs: jobManager.getJobs()
+      //   jobs: jobManager.getJobs()
     })
-
     logger.info('starting Disinfectant Scheduler')
     schedule(config.get('disinfectantSchedule'), async () => {
-        const request={
-            params:{entity: 'dsf_approvalslistsis'},
-            db:server.db
-        }
-    const h = {
-        response:(responseObject)=>responseObject
-    }
-    const responseData= await readDataverseController.handler(request,h)
-})
+      const request = {
+        params: { entity: 'dsf_approvalslistsis' }
+        // db: server.db
+      }
+      const h = {
+        response: (responseObject) => responseObject
+      } // const responseData = await readDataverseController.handler(request, h)
+      await readDataverseController.handler(request, h)
+    })
 
     return {
       data: 'This is from cron job scheduler'
-    //   jobs: jobManager.getJobs()
+      //   jobs: jobManager.getJobs()
     }
   } catch (error) {
     logger.info(error)
@@ -73,4 +93,4 @@ const fetchSubmissions = async () => {
 }
 
 // Export the fetchSubmissions function for use in other modules
-export { fetchSubmissions,disinfectantScheduler }
+export { fetchSubmissions, disinfectantScheduler }

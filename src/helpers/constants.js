@@ -13,7 +13,7 @@ export const schemaMapping = {
   contact: contactsSchema,
   organization: organizationsSchema,
   upload: uploadSchema,
-  disinfectantApprovedList: disinfectantApprovedListSchema,
+  disinfectantApprovedList: disinfectantApprovedListSchema
 }
 
 export const dataverseEntities = {
@@ -21,7 +21,6 @@ export const dataverseEntities = {
   organization: 'nm_organisations',
   developmentSite: 'nm_developmentsites',
   disinfectantApprovedList: 'dsf_approvalslistsis'
-
 }
 
 export const typeOfDeveloperValues = {

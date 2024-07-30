@@ -1,15 +1,16 @@
 import { mongoCollections, schemaMapping } from '~/src/helpers/constants'
 import { createDocument } from '~/src/helpers/databaseTransaction'
+import { buildErrorDetails } from '~/src/helpers/build-error-details'
 import Joi from 'joi'
 
 const createController = {
   handler: async (request, h) => {
     const { value } = request.payload
-    const entity  = "disinfectantApprovedList"
+    const entity = 'disinfectantApprovedList'
     const { collection } = request.params
     try {
-      const schema = Joi.array().items(schemaMapping[entity]);
-      const validationResult = schema.validate(value,{abortEarly:false});
+      const schema = Joi.array().items(schemaMapping[entity])
+      const validationResult = schema.validate(value, { abortEarly: false })
       if (validationResult?.error) {
         const errorDetails = buildErrorDetails(validationResult?.error?.details)
         request.logger.info(
@@ -19,7 +20,11 @@ const createController = {
       }
 
       const collections = mongoCollections[collection]
-      const document = await createDocument(request.db, collections, request.payload)
+      const document = await createDocument(
+        request.db,
+        collections,
+        request.payload
+      )
       return h.response({ message: 'success', document }).code(201)
     } catch (error) {
       return h.response({ error: error.message }).code(500)

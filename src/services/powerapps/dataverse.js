@@ -6,7 +6,7 @@ import { createLogger } from '~/src/helpers/logging/logger'
 const resourceUrl = config.get('dataverseUri')
 const apiBaseUrl = `${resourceUrl}api/data/v9.1`
 const logger = createLogger()
-const additionaParameters =`?$select=dsf_disinfectantname,dsf_companyname,dsf_companyaddress,dsf_chemicalgroups,dsf_fm_approveddilution_formula,dsf_sv_approveddilution_formula,dsf_dp_approveddilution_formula,dsf_tb_approveddilution_formula,dsf_go_approveddilution_formula,dsf_approvalslistsiid`
+const additionaParameters = `?$select=dsf_disinfectantname,dsf_companyname,dsf_companyaddress,dsf_chemicalgroups,dsf_fm_approveddilution_formula,dsf_sv_approveddilution_formula,dsf_dp_approveddilution_formula,dsf_tb_approveddilution_formula,dsf_go_approveddilution_formula,dsf_approvalslistsiid`
 
 const getHeaders = async () => {
   const token = await getAccessToken()
@@ -17,18 +17,26 @@ const getHeaders = async () => {
     'OData-MaxVersion': '4.0',
     'OData-Version': '4.0',
     Prefer: 'return=representation,odata.track-changes'
-    //'Preference-Applied': 'return=representation,odata.track-changes'
-    
-   
+    // 'Preference-Applied': 'return=representation,odata.track-changes'
   }
 }
 
 const getData = async (entity) => {
   try {
     const headers = await getHeaders()
-    const response = await fetchProxyWrapper(`${apiBaseUrl}/${entity}${additionaParameters}`, {
-      headers
-    })
+    let response = {}
+    if (entity === 'dsf_approvalslistsis') {
+      response = await fetchProxyWrapper(
+        `${apiBaseUrl}/${entity}${additionaParameters}`,
+        {
+          headers
+        }
+      )
+    } else {
+      response = await fetchProxyWrapper(`${entity}`, {
+        headers
+      })
+    }
     return response.body
   } catch (error) {
     logger.error(`Get Data failed: ${error.message}`)
@@ -66,7 +74,7 @@ const updateData = async (entity, id, data) => {
   }
 }
 
-const deleteData = async (entity, id) => {
+const deleteOlderCollection = async (entity, id) => {
   try {
     const headers = await getHeaders()
     await fetchProxyWrapper(`${apiBaseUrl}/${entity}(${id})`, {
@@ -137,9 +145,8 @@ export {
   getData,
   createData,
   updateData,
-  deleteData,
+  deleteOlderCollection,
   createTable,
   createColumn,
   getEntityMetadata
-  
 }

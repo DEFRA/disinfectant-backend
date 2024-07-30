@@ -3,10 +3,10 @@ import hapi from '@hapi/hapi'
 import { config } from '~/src/config'
 import { router } from '~/src/api/router'
 import { requestLogger } from '~/src/helpers/logging/request-logger'
-import { mongoPlugin } from '~/src/helpers/mongodb'
 import { failAction } from '~/src/helpers/fail-action'
 import { secureContext } from '~/src/helpers/secure-context'
-import {disinfectantScheduler, fetchSubmissions} from  '../jobs/fetch-submission'
+import { disinfectantScheduler } from '../jobs/fetch-submission'
+import { mongoPlugin } from '../helpers/mongodb'
 
 const isProduction = config.get('isProduction')
 
