@@ -15,12 +15,7 @@ import { getData } from '~/src/services/powerapps/dataverse'
 // import { config } from '~/src/config/index'
 import { proxyFetch } from '~/src/helpers/proxy-fetch'
 import { createLogger } from '~/src/helpers/logging/logger'
-import { processOptions } from './helpers/process-options'
-
-// import { schedule } from 'node-cron'
-
 const logger = createLogger()
-
 const authController = {
   handler: async (request, h) => {
     try {
@@ -131,11 +126,13 @@ const readDataverseController = {
           collections,
           oldCollection[0]._id
         )
+        logger.info('deleted the old collection', deleteOldCollectionvalue)
         const newdocument = await createDocument(
           request.db,
           collections,
           approvedDisinfectants
         )
+        logger.info('Created the new collection', newdocument)
       }
       logger.info('success scheduled job ends: ' + currentTime)
       return h
@@ -176,7 +173,7 @@ const readDataverseDeltaController = {
       )
       const deltaLink = latestCollection[0].deltaLink
       const approvedDisinfectants = await getData(deltaLink)
-      if (approvedDisinfectants.value.length == 0) {
+      if (approvedDisinfectants.value.length === 0) {
         // Get Latest Collection
 
         const updateCollectionValue = await updateCollection(
@@ -185,7 +182,7 @@ const readDataverseDeltaController = {
           latestCollection[0]._id,
           approvedDisinfectants['@odata.deltaLink']
         )
-        //Update the properties of latest collection
+        // Update the properties of latest collection
         return h
           .response({ message: 'success', data: updateCollectionValue })
           .code(200)
@@ -204,78 +201,6 @@ const readDataverseDeltaController = {
           h
         )
         return h.response({ message: 'success', data: newCollection }).code(200)
-        /*  const oldCollection = await readOldCollection(
-
-            request.db,
-            collectionsDeltaLink
-          )
-  
-          const deleteOldCollectionvalue =await deleteOlderCollection(
-            request.db,
-            collectionsDeltaLink,
-            oldCollection[0]._id
-          )
-          const { entity } = request.params
-          
-          const approvedDisinfectantsUpdated = await getData(entity)
-          const combinedChemicalGroups = approvedDisinfectantsUpdated.value
-        .filter((item) => item.dsf_chemicalgroups !== null)
-        .map((item) => item.dsf_chemicalgroups.split(';').map(e=>e.trim()))
-        .reduce((acc, val) => acc.concat(val), [])
-      const uniqueChemicalGroups = [
-        ...new Set(
-          combinedChemicalGroups.filter((value) => value.trim() !== '')
-        )
-      ]
-      // console.log(uniqueChemicalGroups)
-      // Code to update property name @odata.deltaLink to deltaLink
-      approvedDisinfectants.deltaLink =
-        approvedDisinfectantsUpdated['@odata.deltaLink']
-      delete approvedDisinfectantsUpdated['@odata.deltaLink']
-      approvedDisinfectantsUpdated.count = approvedDisinfectantsUpdated.value.length
-      // const newJson=updatedJson
-      approvedDisinfectantsUpdated.chemicalGroups = uniqueChemicalGroups
-      // console.log(newJson.val)
-      // Code to update the properties name
-      approvedDisinfectantsUpdated.value.forEach((element) => {
-        element.disInfectantName = element.dsf_disinfectantname
-        delete element.dsf_disinfectantname
-        element.companyName = element.dsf_companyname
-        delete element.dsf_companyname
-        element.companyAddress = element.dsf_companyaddress
-        delete element.dsf_companyaddress
-        element.chemicalGroups = element.dsf_chemicalgroups
-        delete element.dsf_chemicalgroups
-        element.fmdo = element.dsf_fm_approveddilution_formula
-        delete element.dsf_fm_approveddilution_formula
-        element.svdo = element.dsf_sv_approveddilution_formula
-        delete element.dsf_sv_approveddilution_formula
-        element.dop = element.dsf_dp_approveddilution_formula
-        delete element.dsf_dp_approveddilution_formula
-        element.tbo = element.dsf_tb_approveddilution_formula
-        delete element.dsf_tb_approveddilution_formula
-        element.go = element.dsf_go_approveddilution_formula
-        delete element.dsf_go_approveddilution_formula
-      })
-      // Code to Update propert value to disInfectants
-      approvedDisinfectantsUpdated.disInfectants = approvedDisinfectantsUpdated.value
-      delete approvedDisinfectantsUpdated.value
-      approvedDisinfectantsUpdated.lastModifiedDateAndTime = currentTime
-          const newdocument = await createDocument(
-            request.db,
-            collectionsDeltaLink,
-            approvedDisinfectantsUpdated
-          )
-        }
-      
-      // Code to get unique Chemical Groups
-      
-         // Code to update property name @odata.deltaLink to deltaLink
-      
-    } catch (error) {
-      h.response({ error: error.message }).code(500)
-    }
-  }*/
       }
     } catch (error) {
       h.response({ error: error.message }).code(500)

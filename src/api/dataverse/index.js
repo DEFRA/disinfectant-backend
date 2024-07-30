@@ -16,11 +16,6 @@ const dataverse = {
           path: '/dataverse',
           ...authController
         },
-        /*{
-          method: 'GET',
-          path: '/dataverse-read/{entity}',
-          ...readController
-        },*/
         {
           method: 'GET',
           path: '/list/{collection}',

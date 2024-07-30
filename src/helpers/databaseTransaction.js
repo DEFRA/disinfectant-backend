@@ -48,14 +48,6 @@ const deleteOlderCollection = async (db, collectionName, id) => {
     await collection.deleteOne({
       _id: new ObjectId(id)
     })
-    /* if (matchedCount) {
-      
-    } else {
-      logger.error(
-        `Failed to find the document in ${collectionName} with ${id}`
-      )
-      throw new Error('Failed to find the document')
-    }*/
   } catch (error) {
     logger.error(
       `Failed to update document in ${collectionName} with ${id}: ${error}`
