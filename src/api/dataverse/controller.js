@@ -56,7 +56,7 @@ const readDataverseController = {
     try {
       const currentTime = new Date(Date.now())
       const { entity } = request.params
-      logger.info('success scheduled job starts: ' + currentTime)
+      logger.info('Daily scheduled job starts: ' + currentTime)
       const approvedDisinfectants = await getData(entity)
       // Code to get unique Chemical Groups
       const combinedChemicalGroups = approvedDisinfectants.value
@@ -102,10 +102,8 @@ const readDataverseController = {
       approvedDisinfectants.disInfectants = approvedDisinfectants.value
       delete approvedDisinfectants.value
       approvedDisinfectants.lastModifiedDateAndTime = currentTime
-      logger.info(
-        'Json data from dataverse: ' + JSON.stringify(approvedDisinfectants)
-      )
-      console.log(approvedDisinfectants)
+      logger.info('Json data from dataverse: ' + JSON.stringify(approvedDisinfectants))
+      // console.log(approvedDisinfectants)
       // call the mongo db method to create the collection
       const collections = mongoCollections.disinfectantApprovedListSI
       const documentsRead = await readAllDocuments(request.db, collections)
@@ -115,9 +113,7 @@ const readDataverseController = {
           collections,
           approvedDisinfectants
         )
-        logger.info(
-          'success creating the Mongo Collection: ' + JSON.stringify(document)
-        )
+        logger.info('success creating the Mongo Collection: ' + JSON.stringify(document) )
       } else {
         const oldCollection = await readOldCollection(request.db, collections)
 
@@ -134,7 +130,7 @@ const readDataverseController = {
         )
         logger.info('Created the new collection', newdocument)
       }
-      logger.info('success scheduled job ends: ' + currentTime)
+      logger.info('Daily scheduled job ends: ' + currentTime)
       return h
         .response({ message: 'success', data: approvedDisinfectants })
         .code(200)
@@ -164,7 +160,7 @@ const readDataverseDeltaController = {
       const currentTime = new Date(Date.now())
       // const { entity } = request.params
       // const collection = 'DisinfectantApprovedListSI'
-      logger.info('success scheduled job starts: ' + currentTime)
+      logger.info('10 min scheduled job starts: ' + currentTime)
       // call the mongo db method to create the collection
       const collectionsDeltaLink = mongoCollections.disinfectantApprovedListSI
       const latestCollection = await readLatestCollection(
@@ -205,6 +201,7 @@ const readDataverseDeltaController = {
     } catch (error) {
       h.response({ error: error.message }).code(500)
     }
+    logger.info('10 min scheduled job ends: ' + currentTime)
   }
 }
 const readController = {
