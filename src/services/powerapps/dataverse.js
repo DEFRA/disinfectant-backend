@@ -39,7 +39,7 @@ const getData = async (entity) => {
     }
     return response.body
   } catch (error) {
-    logger.error(`Get Data failed: ${error.message}`)
+    logger.error(`Get Data failed with error: ${error.message}`)
     throw error
   }
 }
@@ -54,7 +54,7 @@ const createData = async (entity, data) => {
     })
     return response.body
   } catch (error) {
-    logger.error(`Create Data failed: ${error.message}`)
+    logger.error(`Create Data failed with error: ${error.message}`)
     throw error
   }
 }
@@ -69,7 +69,7 @@ const updateData = async (entity, id, data) => {
     })
     return response.body
   } catch (error) {
-    logger.error(`Update Data failed: ${error.message}`)
+    logger.error(`Update Data failed with error: ${error.message}`)
     throw error
   }
 }
@@ -83,70 +83,9 @@ const deleteOlderCollection = async (entity, id) => {
     })
     return { message: 'Data deleted successfully' }
   } catch (error) {
-    logger.error(`Delete Data failed: ${error.message}`)
+    logger.error(`Delete Data failed with error: ${error.message}`)
     throw error
   }
 }
 
-const createTable = async (tableDefinition) => {
-  try {
-    const headers = await getHeaders()
-    const response = await fetchProxyWrapper(
-      `${apiBaseUrl}/EntityDefinitions`,
-      {
-        method: 'POST',
-        body: JSON.stringify(tableDefinition),
-        headers
-      }
-    )
-    return response.body
-  } catch (error) {
-    logger.error(`Create table Data failed: ${error.message}`)
-    throw error
-  }
-}
-
-const createColumn = async (tableName, columnDefinition) => {
-  try {
-    const headers = await getHeaders()
-    const response = await fetchProxyWrapper(
-      `${apiBaseUrl}/EntityDefinitions(LogicalName='${tableName}')/Attributes`,
-      {
-        method: 'POST',
-        body: JSON.stringify(columnDefinition),
-        headers
-      }
-    )
-    return response.body
-  } catch (error) {
-    logger.error(`Create column Data failed: ${error.message}`)
-    throw error
-  }
-}
-
-const getEntityMetadata = async (entity) => {
-  try {
-    const headers = await getHeaders()
-    const response = await fetchProxyWrapper(
-      `${apiBaseUrl}/EntityDefinitions(LogicalName='${entity}')`,
-      {
-        method: 'POST',
-        headers
-      }
-    )
-    return response.body
-  } catch (error) {
-    logger.error(`Get Entity Meta Data failed: ${error.message}`)
-    throw error
-  }
-}
-
-export {
-  getData,
-  createData,
-  updateData,
-  deleteOlderCollection,
-  createTable,
-  createColumn,
-  getEntityMetadata
-}
+export { getData, createData, updateData, deleteOlderCollection }
