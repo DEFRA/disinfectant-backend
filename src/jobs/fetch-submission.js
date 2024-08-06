@@ -28,7 +28,7 @@ const disinfectantScheduler = async (server) => {
         response: (responseObject) => responseObject
       }
       const responseData = await readDataverseController.handler(request, h)
-      // logger.info('This is from cron job scheduler', responseData)
+      logger.info('This is from cron job scheduler', responseData)
       // console.warn('working',responseData)
       // await readDataverseController.handler(request, h)
     })
@@ -44,7 +44,7 @@ const disinfectantScheduler = async (server) => {
         request,
         h
       )
-      // logger.info('This is from cron job scheduler', responseData)
+      logger.info('This is from cron job scheduler', responseData)
       // await readDataverseDeltaController.handler(request, h)
       // console.log(responseData).
     })

@@ -9,7 +9,6 @@ const router = {
       // Health-check route. Used by platform to check if service is running, do not remove!
       await server.register([health])
       await server.register([dataverse])
-      
     }
   }
 }

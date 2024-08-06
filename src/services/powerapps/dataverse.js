@@ -88,12 +88,4 @@ const deleteOlderCollection = async (entity, id) => {
   }
 }
 
-
-
-export {
-  getData,
-  createData,
-  updateData,
-  deleteOlderCollection
-  
-}
+export { getData, createData, updateData, deleteOlderCollection }

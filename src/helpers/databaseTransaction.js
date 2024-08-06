@@ -36,7 +36,9 @@ const updateCollection = async (db, collectionName, id, document) => {
       throw new Error('Failed to find the document')
     }
   } catch (error) {
-    logger.error(`Failed to update document in ${collectionName} with ${id}: ${error}`)
+    logger.error(
+      `Failed to update document in ${collectionName} with ${id}: ${error}`
+    )
     throw new Error('Failed to update document')
   }
 }
