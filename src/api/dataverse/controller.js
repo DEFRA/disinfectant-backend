@@ -129,10 +129,11 @@ const syncData=async (entity,request)=>
         )
         logger.info('Created the new collection', newdocument)
       }
-      logger.info('Sync method ends: ' + currentTime)
+      logger.info('Sync method is executed successfully: ' + currentTime)
      
     } catch (error) {
-      logger.info('Sync data method fails: '+error.message + currentTime)
+        logger.error('Sync data method fails: '+error.message + currentTime)
+      //logger.info('Sync data method fails: '+error.message + currentTime)
      // h.response({ error: error.message }).code(500)
     }
   }
@@ -140,6 +141,7 @@ const readDataverseController = {
   handler: async (request, h) => {
     const currentTime = new Date(Date.now())
     try {
+         logger.info('Daily Sync job starts: ' + currentTime)
          const { entity } = request.params
          const callSyncData = await syncData(entity,request.db)
      /* 
@@ -218,9 +220,10 @@ const readDataverseController = {
         )
         logger.info('Created the new collection', newdocument)
       }*/
-      logger.info('Sync function ends: ' + currentTime)
+      logger.info('Daily sync job is completed sucessfully: ' + currentTime)
      
     } catch (error) {
+      logger.error('Daily sync job  fails: '+error.message + currentTime)
       h.response({ error: error.message }).code(500)
     }
   }
@@ -246,7 +249,6 @@ const readDataverseDeltaController = {
  
     try {
       
-      
       // const collection = 'DisinfectantApprovedListSI'
       logger.info('Delta Sync job starts: ' + currentTime)
       // call the mongo db method to create the collection
@@ -270,9 +272,7 @@ const readDataverseDeltaController = {
         )
         // Update the properties of latest collection
         logger.info('Delta Sync job ends with updates in time and deltalink: ' + currentTime)
-        return h
-          .response({ message: 'success', data: updateCollectionValue })
-          .code(200)
+        
       } else {
         
        const entityValue= 'dsf_approvalslistsis'
@@ -287,7 +287,8 @@ const readDataverseDeltaController = {
      
     }
     } catch (error) {
-     return h.response({ error: error.message }).code(500)
+      logger.error('Delta Sync job ends with: ' +error.message + currentTime)
+     // return h.response({ error: error.message }).code(500)
     }
     
   }
