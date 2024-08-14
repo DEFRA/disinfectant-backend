@@ -111,6 +111,7 @@ const syncData = async (entity, request) => {
       logger.info(
         'success creating the Mongo Collection: ' + JSON.stringify(document)
       )
+      return document
     } else {
       const oldCollection = await readOldCollection(request, collections)
 
@@ -126,8 +127,9 @@ const syncData = async (entity, request) => {
         approvedDisinfectants
       )
       logger.info('Created the new collection', newdocument)
+      return newdocument
     }
-    logger.info('Sync method is executed successfully: ' + currentTime)
+    
   } catch (error) {
     logger.error('Sync data method fails: ' + error.message + currentTime)
     // logger.info('Sync data method fails: '+error.message + currentTime)
@@ -141,10 +143,11 @@ const readDataverseController = {
       logger.info('Daily Sync job starts: ' + currentTime)
       const { entity } = request.params
       const callSyncData = await syncData(entity, request.db)
-      logger.info('Sync data method eith values: ' + callSyncData)
+      logger.info('Sync data method with values: ' + callSyncData)
+       return h.response({success:callSyncData})
     } catch (error) {
       logger.error('Daily sync job  fails: ' + error.message + currentTime)
-      h.response({ error: error.message }).code(500)
+     return h.response({ error: error.message }).code(500)
     }
   }
 }
