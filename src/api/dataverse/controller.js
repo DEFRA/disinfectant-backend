@@ -129,7 +129,6 @@ const syncData = async (entity, request) => {
       logger.info('Created the new collection', newdocument)
       return newdocument
     }
-    
   } catch (error) {
     logger.error('Sync data method fails: ' + error.message + currentTime)
     // logger.info('Sync data method fails: '+error.message + currentTime)
@@ -144,10 +143,10 @@ const readDataverseController = {
       const { entity } = request.params
       const callSyncData = await syncData(entity, request.db)
       logger.info('Sync data method with values: ' + callSyncData)
-       return h.response({success:callSyncData})
+      return h.response({ success: callSyncData })
     } catch (error) {
       logger.error('Daily sync job  fails: ' + error.message + currentTime)
-     return h.response({ error: error.message }).code(500)
+      return h.response({ error: error.message }).code(500)
     }
   }
 }
