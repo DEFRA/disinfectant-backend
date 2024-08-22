@@ -14,7 +14,7 @@ const logger = createLogger()
 const disinfectantScheduler = async (server) => {
   try {
     logger.info({
-      data: 'This is from cron job scheduler'
+      data: 'This is from cron job daily scheduler'
       //   jobs: jobManager.getJobs()
     })
 
@@ -49,7 +49,7 @@ const disinfectantScheduler = async (server) => {
       // console.log(responseData).
     })
     return {
-      data: 'This is from cron job scheduler'
+      data: 'This is from 10 min cron job scheduler'
       //   jobs: jobManager.getJobs()
     }
   } catch (error) {
@@ -67,7 +67,7 @@ const disinfectantScheduler = async (server) => {
 const fetchSubmissions = async () => {
   try {
     logger.info({
-      data: 'This is from cron job scheduler'
+      data: 'This is from cron job fetch submission scheduler'
       //   jobs: jobManager.getJobs()
     })
     logger.info('starting Disinfectant Scheduler')
@@ -83,7 +83,7 @@ const fetchSubmissions = async () => {
     })
 
     return {
-      data: 'This is from cron job scheduler'
+      data: 'This is from cron job fetch scheduler'
       //   jobs: jobManager.getJobs()
     }
   } catch (error) {

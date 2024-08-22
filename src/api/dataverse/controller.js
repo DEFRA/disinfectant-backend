@@ -16,6 +16,7 @@ import { getData } from '~/src/services/powerapps/dataverse'
 import { proxyFetch } from '~/src/helpers/proxy-fetch'
 import { createLogger } from '~/src/helpers/logging/logger'
 const logger = createLogger()
+const odatadeltaLink = '@odata.deltaLink'
 const authController = {
   handler: async (request, h) => {
     try {
@@ -66,8 +67,9 @@ const syncData = async (entity, request) => {
     ]
     // console.log(uniqueChemicalGroups)
     // Code to update property name @odata.deltaLink to deltaLink
-    approvedDisinfectants.deltaLink = approvedDisinfectants['@odata.deltaLink']
-    delete approvedDisinfectants['@odata.deltaLink']
+    // const odatadeltaLink='@odata.deltaLink'
+    approvedDisinfectants.deltaLink = approvedDisinfectants[odatadeltaLink]
+    delete approvedDisinfectants[odatadeltaLink]
     approvedDisinfectants.count = approvedDisinfectants.value.length
     // const newJson=updatedJson
     approvedDisinfectants.chemicalGroups = uniqueChemicalGroups
@@ -188,7 +190,7 @@ const readDataverseDeltaController = {
             request.db,
             collectionsDeltaLink,
             latestCollection[0]._id,
-            approvedDisinfectants['@odata.deltaLink']
+            approvedDisinfectants[odatadeltaLink]
           )
           // Update the properties of latest collection
 
