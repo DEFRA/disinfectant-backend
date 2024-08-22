@@ -16,7 +16,7 @@ import { getData } from '~/src/services/powerapps/dataverse'
 import { proxyFetch } from '~/src/helpers/proxy-fetch'
 import { createLogger } from '~/src/helpers/logging/logger'
 const logger = createLogger()
-const odatadeltaLink='@odata.deltaLink'
+const odatadeltaLink = '@odata.deltaLink'
 const authController = {
   handler: async (request, h) => {
     try {
