@@ -64,7 +64,7 @@ const readAllDocuments = async (db, collectionName) => {
     logger.error(
       `Failed to read all documents from ${collectionName}: ${error}`
     )
-    throw new Error('Failed to read documents')
+    throw new Error('Failed to read documents in readAllDocuments')
   }
 }
 
@@ -75,7 +75,7 @@ const readDocument = async (db, collectionName, query) => {
     return result
   } catch (error) {
     logger.error(`Failed to read document from ${collectionName}: ${error}`)
-    throw new Error('Failed to read document')
+    throw new Error('Failed to read document from readDocument')
   }
 }
 
@@ -90,7 +90,7 @@ const readOldCollection = async (db, collectionName) => {
     return result
   } catch (error) {
     logger.error(`Failed to read document from ${collectionName}: ${error}`)
-    throw new Error('Failed to read document')
+    throw new Error('Failed to read document from readOldCollection')
   }
 }
 const readLatestCollection = async (db, collectionName) => {
@@ -104,7 +104,7 @@ const readLatestCollection = async (db, collectionName) => {
     return result
   } catch (error) {
     logger.error(`Failed to read document from ${collectionName}: ${error}`)
-    throw new Error('Failed to read document')
+    throw new Error('Failed to read document from readLatestCollection')
   }
 }
 const updateDocumentInArray = async (db, collectionName, payload) => {
