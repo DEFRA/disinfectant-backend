@@ -111,7 +111,7 @@ const syncData = async (entity, request) => {
         approvedDisinfectants
       )
       logger.info(
-        'success creating the Mongo Collection: ' + JSON.stringify(document)
+        'success creating the Mongo Collection: ' , JSON.stringify(document)
       )
       return document
     } else {
@@ -132,7 +132,7 @@ const syncData = async (entity, request) => {
       return newdocument
     }
   } catch (error) {
-    logger.error('Sync data method fails: ' + error.message + currentTime)
+    logger.error('Sync data method fails: ' ,error.message ,currentTime)
     // logger.info('Sync data method fails: '+error.message + currentTime)
     // h.response({ error: error.message }).code(500)
   }
@@ -141,13 +141,13 @@ const readDataverseController = {
   handler: async (request, h) => {
     const currentTime = new Date(Date.now())
     try {
-      logger.info('Daily Sync job starts: ' + currentTime)
+      logger.info('Daily Sync job starts: ' ,currentTime)
       const { entity } = request.params
       const callSyncData = await syncData(entity, request.db)
-      logger.info('Sync data method with values: ' + callSyncData)
+      logger.info('Sync data method with values: ' , callSyncData)
       return h.response({ success: callSyncData })
     } catch (error) {
-      logger.error('Daily sync job  fails: ' + error.message + currentTime)
+      logger.error('Daily sync job  fails: ' , error.message , currentTime)
       return h.response({ error: error.message }).code(500)
     }
   }
@@ -173,7 +173,7 @@ const readDataverseDeltaController = {
 
     try {
       // const collection = 'DisinfectantApprovedListSI'
-      logger.info('Delta Sync job starts: ' + currentTime)
+      logger.info('Delta Sync job starts: ' ,currentTime)
       // call the mongo db method to create the collection
       const collectionsDeltaLink = mongoCollections.disinfectantApprovedListSI
       const latestCollection = await readLatestCollection(
@@ -195,8 +195,8 @@ const readDataverseDeltaController = {
           // Update the properties of latest collection
 
           logger.info(
-            'Delta Sync job ends with updates in time and deltalink: ' +
-              currentTime +
+            'Delta Sync job ends with updates in time and deltalink: ' ,
+              currentTime ,
               updateCollectionValue
           )
         } else {
@@ -204,14 +204,14 @@ const readDataverseDeltaController = {
 
           const callSyncData = await syncData(entityValue, request.db)
           logger.info(
-            'Delta Sync job ends with updates in collection: ' + callSyncData
+            'Delta Sync job ends with updates in collection: ' , callSyncData
           )
         }
       } else {
-        logger.info('Delta Sync job ends without update: ' + currentTime)
+        logger.info('Delta Sync job ends without update: ' , currentTime)
       }
     } catch (error) {
-      logger.error('Delta Sync job ends with: ' + error.message + currentTime)
+      logger.error('Delta Sync job ends with: ' ,error.message , currentTime)
       // return h.response({ error: error.message }).code(500)
     }
   }
