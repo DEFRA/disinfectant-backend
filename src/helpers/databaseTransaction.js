@@ -1,6 +1,8 @@
-import { ObjectId } from 'mongodb'
-import { createLogger } from '~/src/helpers/logging/logger'
+'use strict'
 
+// import { ObjectId } from 'mongodb'
+import { createLogger } from '~/src/helpers/logging/logger'
+import mongoose from 'mongoose'
 const logger = createLogger()
 
 const createDocument = async (db, collectionName, document) => {
@@ -23,12 +25,16 @@ const updateCollection = async (db, collectionName, id, document) => {
 
     const matchedCount = await collection.updateOne(
       {
-        _id: new ObjectId(id)
+        // _id: new ObjectId(id)
+        _id: new mongoose.Types.ObjectId(`${id}`)
       },
       { $set: { lastModifiedDateAndTime: currentTime, deltaLink: document } }
     )
     if (matchedCount) {
-      return await readDocument(db, collectionName, { _id: new ObjectId(id) })
+      return await readDocument(db, collectionName, {
+        // _id: new ObjectId(id)
+        _id: new mongoose.Types.ObjectId(`${id}`)
+      })
     } else {
       logger.error(
         `Failed to find the document in ${collectionName} with ${id}`
@@ -46,7 +52,8 @@ const deleteOlderCollection = async (db, collectionName, id) => {
   try {
     const collection = db.collection(collectionName)
     await collection.deleteOne({
-      _id: new ObjectId(id)
+      // _id: new ObjectId(id)
+      _id: new mongoose.Types.ObjectId(`${id}`)
     })
   } catch (error) {
     logger.error(
