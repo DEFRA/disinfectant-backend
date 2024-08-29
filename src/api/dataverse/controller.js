@@ -18,6 +18,7 @@ import { createLogger } from '~/src/helpers/logging/logger'
 const logger = createLogger()
 const errorCode = 500
 const successCode = 200
+const multipleStatusCode = 300
 const odatadeltaLink = '@odata.deltaLink'
 const authController = {
   handler: async (request, h) => {
@@ -37,7 +38,10 @@ const testProxy = {
       const response = await proxyFetch('https://www.google.com', {
         method: 'GET'
       })
-      if (response.status >= successCode && response.status < 300) {
+      if (
+        response.status >= successCode &&
+        response.status < multipleStatusCode
+      ) {
         const text = await response.text()
         return h.response({ proxyAgentObj, text })
       } else {
