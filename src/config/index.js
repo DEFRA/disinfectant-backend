@@ -110,7 +110,7 @@ const config = convict({
   },
   disinfectantDeltaSchedule: {
     doc: 'How often to poll the disinfectant data (cron format)',
-    format: String, 
+    format: String,
     default: '0 */10 * * * *',
 
     env: 'DISINFECTANTS__DELTA_SCHEDULE'
