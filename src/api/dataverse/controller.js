@@ -16,14 +16,16 @@ import { getData } from '~/src/services/powerapps/dataverse'
 import { proxyFetch } from '~/src/helpers/proxy-fetch'
 import { createLogger } from '~/src/helpers/logging/logger'
 const logger = createLogger()
+const errorCode=500
+const successCode=200
 const odatadeltaLink = '@odata.deltaLink'
 const authController = {
   handler: async (request, h) => {
     try {
       const token = await getAccessToken()
-      return h.response({ message: 'success', token }).code(200)
+      return h.response({ message: 'success', token }).code(successCode)
     } catch (error) {
-      return h.response({ error }).code(500)
+      return h.response({ error }).code(errorCode)
     }
   }
 }
@@ -35,7 +37,7 @@ const testProxy = {
       const response = await proxyFetch('https://www.google.com', {
         method: 'GET'
       })
-      if (response.status >= 200 && response.status < 300) {
+      if (response.status >= successCode && response.status < 300) {
         const text = await response.text()
         return h.response({ proxyAgentObj, text })
       } else {
@@ -135,7 +137,7 @@ const syncData = async (entity, request) => {
   } catch (error) {
     logger.error('Sync data method fails: ', error.message, currentTime)
     // logger.info('Sync data method fails: '+error.message + currentTime)
-    // h.response({ error: error.message }).code(500)
+    // h.response({ error: error.message }).code(errorCode)
   }
 }
 const readDataverseController = {
@@ -149,7 +151,7 @@ const readDataverseController = {
       return h.response({ success: callSyncData })
     } catch (error) {
       logger.error('Daily sync job  fails: ', error.message, currentTime)
-      return h.response({ error: error.message }).code(500)
+      return h.response({ error: error.message }).code(errorCode)
     }
   }
 }
@@ -162,9 +164,9 @@ const listDBController = {
         mongoCollections[collection]
       )
 
-      return h.response({ message: 'success', documents }).code(200)
+      return h.response({ message: 'success', documents }).code(successCode)
     } catch (error) {
-      return h.response({ error: error.message }).code(500)
+      return h.response({ error: error.message }).code(errorCode)
     }
   }
 }
@@ -214,7 +216,7 @@ const readDataverseDeltaController = {
       }
     } catch (error) {
       logger.error('Delta Sync job ends with: ', error.message, currentTime)
-      // return h.response({ error: error.message }).code(500)
+      // return h.response({ error: error.message }).code(errorCode)
     }
   }
 }
