@@ -21,7 +21,7 @@ const successCode = 200
 const multipleStatusCode = 300
 const odatadeltaLink = '@odata.deltaLink'
 const authController = {
-  handler: async (request, h) => {
+  handler: async (_request, h) => {
     try {
       const token = await getAccessToken()
       return h.response({ message: 'success', token }).code(successCode)
@@ -32,7 +32,7 @@ const authController = {
 }
 
 const testProxy = {
-  handler: async (request, h) => {
+  handler: async (_request, h) => {
     const proxyAgentObj = proxyAgent()
     try {
       const response = await proxyFetch('https://www.google.com', {
@@ -175,7 +175,7 @@ const listDBController = {
   }
 }
 const readDataverseDeltaController = {
-  handler: async (request, h) => {
+  handler: async (request, _h) => {
     const currentTime = new Date(Date.now())
 
     try {
