@@ -13,16 +13,15 @@ module.exports = {
     '<rootDir>/.server',
     '<rootDir>/src/__fixtures__',
     '<rootDir>/src/helpers/',
-     '<rootDir>/src/services/powerapps/',
-     '<rootDir>/src/schema/',
-     '<rootDir>/src/jobs/',
-     '<rootDir>/src/index.js',
-     '<rootDir>/src/api/router.js',
-     '<rootDir>/src/api/server.js',
-     '<rootDir>/src/api/dataverse/helpers/',
-     '<rootDir>/src/api/dataverse/index.js',
-     '<rootDir>/src/api/health/index.js',
-
+    '<rootDir>/src/services/powerapps/',
+    '<rootDir>/src/schema/',
+    '<rootDir>/src/jobs/',
+    '<rootDir>/src/index.js',
+    '<rootDir>/src/api/router.js',
+    '<rootDir>/src/api/server.js',
+    '<rootDir>/src/api/dataverse/helpers/',
+    '<rootDir>/src/api/dataverse/index.js',
+    '<rootDir>/src/api/health/index.js'
   ],
   coverageDirectory: '<rootDir>/coverage'
 }

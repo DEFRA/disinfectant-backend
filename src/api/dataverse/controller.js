@@ -140,10 +140,10 @@ const syncData = async (entity, request) => {
     }
   } catch (error) {
     logger.error('Sync data method fails: ', error.message, currentTime)
-    
+
     // logger.info('Sync data method fails: '+error.message + currentTime)
     // h.response({ error: error.message }).code(errorCode)
-    throw error;
+    throw error
   }
 }
 const readDataverseController = {
@@ -223,7 +223,7 @@ const readDataverseDeltaController = {
     } catch (error) {
       logger.error('Delta Sync job ends with: ', error.message, currentTime)
       // return h.response({ error: error.message }).code(errorCode)
-      throw error;
+      throw error
     }
   }
 }

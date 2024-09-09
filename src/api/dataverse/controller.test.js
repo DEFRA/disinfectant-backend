@@ -3,7 +3,8 @@ import {
   readDataverseDeltaController,
   testProxy,
   listDBController,
-  readDataverseController
+  readDataverseController,
+  authController
 } from '~/src/api/dataverse/controller'
 import { getData } from '~/src/services/powerapps/dataverse'
 import {
@@ -15,11 +16,8 @@ import {
   updateCollection
 } from '~/src/helpers/databaseTransaction'
 
-import { createLogger } from '~/src/helpers/logging/logger'
-
+// import { createLogger } from '~/src/helpers/logging/logger'
 import { getAccessToken } from '~/src/services/powerapps/auth'
-import { authController } from '~/src/api/dataverse/controller'
-
 import { proxyAgent } from '~/src/helpers/proxy-agent'
 import { proxyFetch } from '~/src/helpers/proxy-fetch'
 import { mongoCollections } from '~/src/helpers/constants'
@@ -47,7 +45,7 @@ jest.mock('~/src/helpers/constants')
 
 const errorCode = 500
 const successCode = 200
-const multipleStatusCode = 300
+// const multipleStatusCode = 300
 
 describe('syncData', () => {
   const mockError = new Error('Sync data failed')
@@ -147,7 +145,8 @@ describe('authController', () => {
 })
 
 describe('readDataverseDeltaController', () => {
-  let mockServer, logger, mockViewHandler, mockRequest
+  // let mockServer, logger, mockViewHandler, mockRequest
+  let mockServer, mockRequest
   const mockH = {
     response: jest.fn().mockReturnValue({
       code: jest.fn()
@@ -155,7 +154,7 @@ describe('readDataverseDeltaController', () => {
   }
 
   beforeEach(() => {
-    logger = createLogger() // Creating logger mock
+    // logger = createLogger() // Creating logger mock
 
     mockServer = {
       db: {
@@ -169,12 +168,6 @@ describe('readDataverseDeltaController', () => {
           deleteOne: jest.fn().mockResolvedValue({ deletedCount: 1 })
         })
       }
-    }
-
-    mockViewHandler = {
-      response: jest.fn().mockReturnThis(),
-
-      code: jest.fn().mockReturnThis()
     }
 
     mockRequest = {
@@ -209,8 +202,8 @@ describe('readDataverseDeltaController', () => {
       mockLatestCollection[0]._id,
       mockApprovedDisinfectants['@odata.deltaLink']
     )
-  
   })
+
   test('should handle delta sync job with updates in sync data', async () => {
     const mockLatestCollection = []
     const mockApprovedDisinfectants = {
@@ -247,6 +240,7 @@ describe('readDataverseDeltaController', () => {
     ).rejects.toThrow(mockError)
   })
 })
+
 describe('testProxy', () => {
   const mockRequest = {}
   const mockH = {
@@ -336,7 +330,7 @@ describe('listDBController', () => {
   }
 
   beforeEach(() => {
-    ;(mockServer = {
+    mockServer = {
       db: {
         collection: jest.fn().mockReturnValue({
           find: jest.fn().mockReturnValue({
@@ -348,13 +342,13 @@ describe('listDBController', () => {
           deleteOne: jest.fn().mockResolvedValue({ deletedCount: 1 })
         })
       }
-    }),
-      (mockRequest = {
-        params: { entity: 'DisinfectantApprovedListSI' },
+    }
+    mockRequest = {
+      params: { entity: 'DisinfectantApprovedListSI' },
 
-        db: mockServer.db
-      }),
-      jest.clearAllMocks()
+      db: mockServer.db
+    }
+    jest.clearAllMocks()
   })
 
   test('should return success response with documents', async () => {
@@ -392,7 +386,7 @@ describe('listDBController', () => {
 })
 
 describe('readDataverseController', () => {
-  let mockRequest, mockServer, logger
+  let mockRequest, mockServer
 
   const mockH = {
     response: jest.fn().mockReturnThis(),
@@ -400,7 +394,7 @@ describe('readDataverseController', () => {
   }
 
   beforeEach(() => {
-    (mockServer = {
+    mockServer = {
       db: {
         collection: jest.fn().mockReturnValue({
           find: jest.fn().mockReturnValue({
@@ -412,14 +406,13 @@ describe('readDataverseController', () => {
           deleteOne: jest.fn().mockResolvedValue({ deletedCount: 1 })
         })
       }
-    }),
-      (mockRequest = {
-        params: { entity: 'DisinfectantApprovedListSI' },
+    }
+    mockRequest = {
+      params: { entity: 'DisinfectantApprovedListSI' },
 
-        db: mockServer.db
-      }),
-      logger = createLogger(),
-      jest.clearAllMocks()
+      db: mockServer.db
+    }
+    jest.clearAllMocks()
   })
 
   test('should handle successful sync data', async () => {
@@ -431,7 +424,7 @@ describe('readDataverseController', () => {
   })
 
   test('should handle error during sync data', async () => {
-    const mockError = new Error('Sync data failed')
+    // const mockError = new Error('Sync data failed')
     const result = await readDataverseController.handler(mockRequest, mockH)
     expect(mockH.code).toHaveBeenCalledWith(errorCode)
     expect(result).toEqual(mockH.response())
