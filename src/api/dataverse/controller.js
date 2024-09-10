@@ -177,7 +177,7 @@ const listDBController = {
   }
 }
 const readDataverseDeltaController = {
-  handler: async (request, h) => {
+  handler: async (request, _h) => {
     const currentTime = new Date(Date.now())
 
     try {
