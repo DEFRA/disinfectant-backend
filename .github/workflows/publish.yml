@@ -28,9 +28,9 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
         env:
-          AZ_TENANT_ID:  ${{ secrets.AZ_TENANT_ID_DEV}}
-          AZ_CLIENT_ID:  ${{ secrets.AZ_CLIENT_ID_DEV}}
-          AZ_CLIENT_SECRET:  ${{ secrets.AZ_CLIENT_SECRET_DEV}}
+          AZ_TENANT_ID: ${{ secrets.AZ_TENANT_ID_DEV}}
+          AZ_CLIENT_ID: ${{ secrets.AZ_CLIENT_ID_DEV}}
+          AZ_CLIENT_SECRET: ${{ secrets.AZ_CLIENT_SECRET_DEV}}
       - run: npm install && npm test
       # No longer needed with the latest version of the SonarCloud GitHub Action
       # https://community.sonarsource.com/t/code-coverage-doesnt-work-with-github-action/16747/6
