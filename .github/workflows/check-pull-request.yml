@@ -31,3 +31,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          AZ_TENANT_ID: ${{ secrets.AZ_TENANT_ID_DEV}}
+          AZ_CLIENT_ID: ${{ secrets.AZ_CLIENT_ID_DEV}}
+          AZ_CLIENT_SECRET: ${{ secrets.AZ_CLIENT_SECRET_DEV}}
