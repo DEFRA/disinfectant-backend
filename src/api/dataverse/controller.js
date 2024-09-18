@@ -209,7 +209,7 @@ const readDataverseDeltaController = {
             updateCollectionValue
           )
           return h.response({
-            message: 'Delta Sync job ends with updates in collection'
+            message: 'Delta Sync job ends with updates in time and deltalink'
           })
         } else {
           const entityValue = 'dsf_approvalslistsis'
@@ -226,7 +226,7 @@ const readDataverseDeltaController = {
       } else {
         logger.info('Delta Sync job ends without update: ', currentTime)
         return h.response({
-          message: 'Delta Sync job ends with updates in collection'
+          message: 'Delta Sync job ends without update:'
         })
       }
     } catch (error) {
