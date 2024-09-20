@@ -1,7 +1,6 @@
 import {
   syncData,
   readDataverseDeltaController,
-  testProxy,
   listDBController,
   readDataverseController,
   authController
@@ -18,8 +17,7 @@ import {
 
 // import { createLogger } from '~/src/helpers/logging/logger'
 import { getAccessToken } from '~/src/services/powerapps/auth'
-import { proxyAgent } from '~/src/helpers/proxy-agent'
-import { proxyFetch } from '~/src/helpers/proxy-fetch'
+
 import { mongoCollections } from '~/src/helpers/constants'
 
 jest.mock('~/src/services/powerapps/dataverse')
@@ -238,86 +236,6 @@ describe('readDataverseDeltaController', () => {
     await expect(
       readDataverseDeltaController.handler(mockRequest, mockH)
     ).rejects.toThrow(mockError)
-  })
-})
-
-describe('testProxy', () => {
-  const mockRequest = {}
-  const mockH = {
-    response: jest.fn().mockReturnThis()
-  }
-
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
-
-  test('should return successful response', async () => {
-    const mockResponse = {
-      status: 200,
-      text: jest.fn().mockResolvedValue('Mock response text')
-    }
-    const mockProxyAgentObj = proxyAgent()
-    proxyAgent.mockReturnValue(mockProxyAgentObj)
-    proxyFetch.mockResolvedValue(mockResponse)
-
-    const result = await testProxy.handler(mockRequest, mockH)
-
-    expect(proxyAgent).toHaveBeenCalled()
-    expect(proxyFetch).toHaveBeenCalledWith('https://www.google.com', {
-      method: 'GET'
-    })
-    expect(mockResponse.text).toHaveBeenCalled()
-    expect(mockH.response).toHaveBeenCalledWith({
-      proxyAgentObj: mockProxyAgentObj,
-      text: 'Mock response text'
-    })
-    expect(result).toEqual(mockH.response())
-  })
-
-  test('should return failed response', async () => {
-    const mockResponse = {
-      status: 400,
-      statusText: 'Bad Request'
-    }
-    const mockProxyAgentObj = proxyAgent()
-    proxyAgent.mockReturnValue(mockProxyAgentObj)
-    proxyFetch.mockResolvedValue(mockResponse)
-
-    const result = await testProxy.handler(mockRequest, mockH)
-
-    expect(proxyAgent).toHaveBeenCalled()
-    expect(proxyFetch).toHaveBeenCalledWith('https://www.google.com', {
-      method: 'GET'
-    })
-    expect(mockH.response).toHaveBeenCalledWith({
-      message: 'Fetch failed',
-      proxyAgentObj: mockProxyAgentObj,
-      status: 400,
-      error: 'Bad Request'
-    })
-    expect(result).toEqual(mockH.response())
-  })
-
-  test('should return error response', async () => {
-    const mockError = new Error('Some error')
-    const mockProxyAgentObj = {
-      /* mock proxy agent object */
-    }
-    proxyAgent.mockReturnValue(mockProxyAgentObj)
-    proxyFetch.mockRejectedValue(mockError)
-
-    const result = await testProxy.handler(mockRequest, mockH)
-
-    expect(proxyAgent).toHaveBeenCalled()
-    expect(proxyFetch).toHaveBeenCalledWith('https://www.google.com', {
-      method: 'GET'
-    })
-    expect(mockH.response).toHaveBeenCalledWith({
-      message: 'error',
-      proxyAgentObj: mockProxyAgentObj,
-      error: mockError
-    })
-    expect(result).toEqual(mockH.response())
   })
 })
 

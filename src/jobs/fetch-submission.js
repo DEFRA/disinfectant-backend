@@ -14,11 +14,11 @@ const logger = createLogger()
 const disinfectantScheduler = async (server) => {
   try {
     logger.info({
-      data: 'This is from cron job daily scheduler'
+      data: 'This call is from daily scheduler'
       //   jobs: jobManager.getJobs()
     })
 
-    logger.info('starting Disinfectant Scheduler')
+    logger.info('Starting Disinfectant Scheduler')
     schedule(config.get('disinfectantSchedule'), async () => {
       const request = {
         params: { entity: 'dsf_approvalslistsis' },
@@ -28,7 +28,7 @@ const disinfectantScheduler = async (server) => {
         response: (responseObject) => responseObject
       }
       const responseData = await readDataverseController.handler(request, h)
-      logger.info('This is from daily cron job scheduler', responseData)
+      logger.info('This call is from daily scheduler' + responseData)
       // console.warn('working',responseData)
       // await readDataverseController.handler(request, h)
     })
@@ -44,12 +44,12 @@ const disinfectantScheduler = async (server) => {
         request,
         h
       )
-      logger.info('This is from 10 min cron job scheduler', responseData)
+      logger.info('This call is from 10 min job scheduler' + responseData)
       // await readDataverseDeltaController.handler(request, h)
       // console.log(responseData).
     })
     return {
-      data: 'This is from 10 min cron job scheduler'
+      data: 'This call is from 10 min cron job scheduler'
       //   jobs: jobManager.getJobs()
     }
   } catch (error) {
@@ -87,7 +87,7 @@ const fetchSubmissions = async () => {
       //   jobs: jobManager.getJobs()
     }
   } catch (error) {
-    logger.info(error)
+    logger.error(error)
     throw error
   }
 }
