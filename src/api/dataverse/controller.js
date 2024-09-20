@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import { mongoCollections } from '~/src/helpers/constants'
-import { proxyAgent } from '~/src/helpers/proxy-agent'
 
 import { getAccessToken } from '~/src/services/powerapps/auth'
 import {
@@ -13,12 +12,12 @@ import {
 } from '~/src/helpers/databaseTransaction'
 import { getData } from '~/src/services/powerapps/dataverse'
 // import { config } from '~/src/config/index'
-import { proxyFetch } from '~/src/helpers/proxy-fetch'
+
 import { createLogger } from '~/src/helpers/logging/logger'
 const logger = createLogger()
 const errorCode = 500
 const successCode = 200
-const multipleStatusCode = 300
+
 const odatadeltaLink = '@odata.deltaLink'
 const authController = {
   handler: async (_request, h) => {
@@ -27,33 +26,6 @@ const authController = {
       return h.response({ message: 'success', token }).code(successCode)
     } catch (error) {
       return h.response({ error }).code(errorCode)
-    }
-  }
-}
-
-const testProxy = {
-  handler: async (_request, h) => {
-    const proxyAgentObj = proxyAgent()
-    try {
-      const response = await proxyFetch('https://www.google.com', {
-        method: 'GET'
-      })
-      if (
-        response.status >= successCode &&
-        response.status < multipleStatusCode
-      ) {
-        const text = await response.text()
-        return h.response({ proxyAgentObj, text })
-      } else {
-        return h.response({
-          message: 'Fetch failed',
-          proxyAgentObj,
-          status: response.status,
-          error: response.statusText
-        })
-      }
-    } catch (error) {
-      return h.response({ message: 'error', proxyAgentObj, error })
     }
   }
 }
@@ -139,7 +111,7 @@ const syncData = async (entity, request) => {
       return newdocument
     }
   } catch (error) {
-    logger.error('Sync data method fails: ', error.message, currentTime)
+    logger.error('Sync data method fails: ' + error.message + currentTime)
 
     // logger.info('Sync data method fails: '+error.message + currentTime)
     // h.response({ error: error.message }).code(errorCode)
@@ -150,13 +122,13 @@ const readDataverseController = {
   handler: async (request, h) => {
     const currentTime = new Date(Date.now())
     try {
-      logger.info('Daily Sync job starts: ', currentTime)
+      logger.info('Daily Sync job starts: ' + currentTime)
       const { entity } = request.params
       const callSyncData = await syncData(entity, request.db)
       logger.info('Sync data method with values: ', callSyncData)
       return h.response({ success: callSyncData })
     } catch (error) {
-      logger.error('Daily sync job  fails: ', error.message, currentTime)
+      logger.error('Daily sync job  fails: ' + error.message + currentTime)
       return h.response({ error: error.message }).code(errorCode)
     }
   }
@@ -182,7 +154,7 @@ const readDataverseDeltaController = {
 
     try {
       // const collection = 'DisinfectantApprovedListSI'
-      logger.info('Delta Sync job starts: ', currentTime)
+      logger.info('Delta Sync job starts: ' + currentTime)
       // call the mongo db method to create the collection
       const collectionsDeltaLink = mongoCollections.disinfectantApprovedListSI
       const latestCollection = await readLatestCollection(
@@ -204,12 +176,13 @@ const readDataverseDeltaController = {
           // Update the properties of latest collection
 
           logger.info(
-            'Delta Sync job ends with updates in time and deltalink: ',
-            currentTime,
-            updateCollectionValue
+            'Delta Sync job ends with updates in time and deltalink: ' +
+              currentTime
           )
           return h.response({
-            message: 'Delta Sync job ends with updates in time and deltalink'
+            message:
+              'Delta Sync job ends with updates in time and deltalink:' +
+              updateCollectionValue
           })
         } else {
           const entityValue = 'dsf_approvalslistsis'
@@ -224,13 +197,13 @@ const readDataverseDeltaController = {
           })
         }
       } else {
-        logger.info('Delta Sync job ends without update: ', currentTime)
+        logger.info('Delta Sync job ends without update: ' + currentTime)
         return h.response({
           message: 'Delta Sync job ends without update:'
         })
       }
     } catch (error) {
-      logger.error('Delta Sync job ends with: ', error.message, currentTime)
+      logger.error('Delta Sync job ends with: ' + error.message + currentTime)
       // return h.response({ error: error.message }).code(errorCode)
       throw error
     }
@@ -241,7 +214,6 @@ export {
   authController,
   readDataverseController,
   listDBController,
-  testProxy,
   readDataverseDeltaController,
   syncData
 }

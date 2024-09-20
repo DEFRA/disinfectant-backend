@@ -98,20 +98,20 @@ const config = convict({
   dataverseUri: {
     doc: 'The power apps dataverse URI',
     format: String,
-    default: 'https://org5d77c363.api.crm11.dynamics.com/',
+    default: 'https://disinfectants-dev.api.crm11.dynamics.com/',
     env: 'DATAVERSE_URI'
   },
   disinfectantSchedule: {
     doc: 'How often to poll the disinfectant data (cron format)',
     format: String,
-    default: '0 */50 * * * *',
+    default: '0 */20 * * * *',
 
     env: 'DISINFECTANTS__DAILY_SCHEDULE'
   },
   disinfectantDeltaSchedule: {
     doc: 'How often to poll the disinfectant data (cron format)',
     format: String,
-    default: '0 */10 * * * *',
+    default: '0 */5 * * * *',
 
     env: 'DISINFECTANTS__DELTA_SCHEDULE'
   }

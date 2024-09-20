@@ -1,6 +1,5 @@
 import {
   authController,
-  testProxy,
   listDBController,
   readDataverseController,
   readDataverseDeltaController
@@ -30,12 +29,6 @@ const dataverse = {
           method: 'GET',
           path: '/dataverse-readDeltaLink/{entity}',
           ...readDataverseDeltaController
-        },
-
-        {
-          method: 'GET',
-          path: '/test-proxy',
-          ...testProxy
         }
       ])
     }
