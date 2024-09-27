@@ -1,4 +1,4 @@
-# disinfectant-backend
+# Disinfectant-Backend
 
 ## Project Overview
 
@@ -87,7 +87,7 @@ npm run test
 
 #### Production
 
-To mimic the application running in `production` mode locally run:
+To mimic the application running in `production` mode locally, run:
 
 ```bash
 npm start
@@ -211,9 +211,9 @@ docker compose up --build -d
 
 ## Contributing
 
-If a need to alter/add code to this prject arises, please follow the steps below to contribute:
+If a need to alter/add code to this project arises, please follow the steps below to contribute:
 
-1. Make sure you have cloned the repository as shown in the `Setup Instructutions` above.
+1. Make sure you have cloned the repository as shown in the `Setup Instructions` above.
 2. Create a new branch with a descriptive name:
 
 ```bash
@@ -221,7 +221,7 @@ git checkout -b feature/new-feature-name
 ```
 
 3. Make your changes.
-4. Before committing your code, please ensure that your code is properly formatted and free of linting errors. Run the following commands in your code editor terminal in the respecitive order:
+4. Before committing your code, please ensure that your code is properly formatted and free of linting errors. Run the following commands in your code editor terminal in the respective order:
 
 ```bash
 npm run format
@@ -239,7 +239,7 @@ git commit -m "describe what you have done"
 
 6. Submit a pull request and describe your changes
 
-Once your code has been reviewed and tested it will be ready to push to the main branch
+7. Once your code has been reviewed and tested, it will be ready to push to the main branch
 
 ## Licence
 
