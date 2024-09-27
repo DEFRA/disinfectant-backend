@@ -1,5 +1,9 @@
 # disinfectant-backend
 
+## Project Overview
+
+This is a Node.js based Backend project designed for building scalabale and maintainable API services. It supports local development and production environments, with Docker integration for containerisation and MongoDB for data persistence.
+
 Core delivery platform Node.js Backend Template.
 
 - [Requirements](#requirements)
@@ -34,7 +38,30 @@ nvm use
 
 ## Local development
 
-### Setup
+### Setup Instructions
+
+#### Cloning the Repository
+
+To set up the project locally on your machine, follow these steps:
+
+1. open your terminal or command prompt.
+2. Navigate to the directory where you'd like to clone the project.
+3. Run the following `git` command to the clone repository:
+
+```bash
+git clone https://github.com/DEFRA/disinfectant-backend.git
+```
+
+4. After cloning the repository, navigate to the project folder:
+
+```bash
+cd disinfectant-backend
+```
+
+> ⚠️
+> Please make sure you have the appropriate Node.js and npm packages installed. For more details, please consult the section above titled `Requirements`.
+
+#### Installing Dependencies
 
 Install application dependencies:
 
@@ -42,7 +69,7 @@ Install application dependencies:
 npm install
 ```
 
-### Development
+#### Running the Application
 
 To run the application in `development` mode run:
 
@@ -50,7 +77,7 @@ To run the application in `development` mode run:
 npm run dev
 ```
 
-### Testing
+#### Testing
 
 To test the application run:
 
@@ -58,7 +85,7 @@ To test the application run:
 npm run test
 ```
 
-### Production
+#### Production
 
 To mimic the application running in `production` mode locally run:
 
@@ -66,7 +93,7 @@ To mimic the application running in `production` mode locally run:
 npm start
 ```
 
-### Npm scripts
+#### Npm scripts
 
 All available Npm scripts can be seen in [package.json](./package.json)
 To view them in your command line run:
@@ -181,6 +208,38 @@ A local environment with:
 ```bash
 docker compose up --build -d
 ```
+
+## Contributing
+
+If a need to alter/add code to this prject arises, please follow the steps below to contribute:
+
+1. Make sure you have cloned the repository as shown in the `Setup Instructutions` above.
+2. Create a new branch with a descriptive name:
+
+```bash
+git checkout -b feature/new-feature-name
+```
+
+3. Make your changes.
+4. Before committing your code, please ensure that your code is properly formatted and free of linting errors. Run the following commands in your code editor terminal in the respecitive order:
+
+```bash
+npm run format
+```
+
+```bash
+npm run lint
+```
+
+Address any issues that may have been flagged 5. Commit your changes:
+
+```bash
+git commit -m "describe what you have done"
+```
+
+6. Submit a pull request and describe your changes
+
+Once your code has been reviewed and tested it will be ready to push to the main branch
 
 ## Licence
 
