@@ -2,7 +2,9 @@ import {
   authController,
   listDBController,
   readDataverseController,
-  readDataverseDeltaController
+  readDataverseDeltaController,
+  readDeletedDataVerseController,
+  readModifiedDataVerseController
 } from '~/src/api/dataverse/controller'
 
 const dataverse = {
@@ -29,6 +31,16 @@ const dataverse = {
           method: 'GET',
           path: '/dataverse-readDeltaLink/{entity}',
           ...readDataverseDeltaController
+        },
+        {
+          method: 'GET',
+          path: '/dataverse-readDeleteddata/{entity}',
+          ...readDeletedDataVerseController
+        },
+        {
+          method: 'GET',
+          path: '/dataverse-readModifieddata/{entity}',
+          ...readModifiedDataVerseController
         }
       ])
     }
