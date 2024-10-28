@@ -4,7 +4,9 @@ import { createLogger } from '../helpers/logging/logger'
 import { schedule } from 'node-cron'
 import {
   readDataverseController,
-  readDataverseDeltaController
+  readDataverseDeltaController,
+  readDeletedDataVerseController,
+  readModifiedDataVerseController
 } from '../api/dataverse/controller'
 import { config } from '~/src/config'
 
@@ -92,5 +94,66 @@ const fetchSubmissions = async () => {
   }
 }
 
+const getDeletedDisinfectants = async (server) => {
+  try {
+    logger.info({
+      data: 'This is from cron job fetch deleted disinfectant'
+      //   jobs: jobManager.getJobs()
+    })
+    logger.info('starting Deleted Disinfectant Scheduler')
+    schedule(config.get('deleteddisinfectantSchedule'), async () => {
+      const request = {
+        params: { entity: 'dsf_deleteddisinfectantses' },
+        db: server.db
+      }
+      const h = {
+        response: (responseObject) => responseObject
+      } // const responseData = await readDataverseController.handler(request, h)
+      await readDeletedDataVerseController.handler(request, h)
+    })
+
+    return {
+      data: 'This is from cron job fetch deleted disinfectants scheduler'
+      //   jobs: jobManager.getJobs()
+    }
+  } catch (error) {
+    logger.error(error)
+    throw error
+  }
+}
+
+const getModifiedDisinfectants = async (server) => {
+  try {
+    logger.info({
+      data: 'This is from cron job fetch modified disinfectant'
+      //   jobs: jobManager.getJobs()
+    })
+    logger.info('starting modified Disinfectant Scheduler')
+    schedule(config.get('updateddisinfectantSchedule'), async () => {
+      const request = {
+        params: { entity: 'dsf_approvalslistsis' },
+        db: server.db
+      }
+      const h = {
+        response: (responseObject) => responseObject
+      } // const responseData = await readDataverseController.handler(request, h)
+      await readModifiedDataVerseController.handler(request, h)
+    })
+
+    return {
+      data: 'This is from cron job fetch modified disinfectants scheduler'
+      //   jobs: jobManager.getJobs()
+    }
+  } catch (error) {
+    logger.error(error)
+    throw error
+  }
+}
+
 // Export the fetchSubmissions function for use in other modules
-export { fetchSubmissions, disinfectantScheduler }
+export {
+  fetchSubmissions,
+  disinfectantScheduler,
+  getDeletedDisinfectants,
+  getModifiedDisinfectants
+}

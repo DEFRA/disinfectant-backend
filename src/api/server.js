@@ -5,7 +5,11 @@ import { router } from '~/src/api/router'
 import { requestLogger } from '~/src/helpers/logging/request-logger'
 import { failAction } from '~/src/helpers/fail-action'
 import { secureContext } from '~/src/helpers/secure-context'
-import { disinfectantScheduler } from '../jobs/fetch-submission'
+import {
+  disinfectantScheduler,
+  getDeletedDisinfectants,
+  getModifiedDisinfectants
+} from '../jobs/fetch-submission'
 import { mongoPlugin } from '../helpers/mongodb'
 
 const isProduction = config.get('isProduction')
@@ -54,6 +58,8 @@ async function createServer() {
   // call scheduler
 
   await disinfectantScheduler(server)
+  await getDeletedDisinfectants(server)
+  await getModifiedDisinfectants(server)
 
   return server
 }

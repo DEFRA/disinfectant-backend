@@ -8,9 +8,14 @@ import {
   readLatestCollection,
   readOldCollection,
   deleteOlderCollection,
-  updateCollection
+  updateCollection,
+  deleteCollection
 } from '~/src/helpers/databaseTransaction'
-import { getData } from '~/src/services/powerapps/dataverse'
+import {
+  getData,
+  getDeleteddata,
+  getModifieddata
+} from '~/src/services/powerapps/dataverse'
 // import { config } from '~/src/config/index'
 
 import { createLogger } from '~/src/helpers/logging/logger'
@@ -118,6 +123,7 @@ const syncData = async (entity, request) => {
     throw error
   }
 }
+
 const readDataverseController = {
   handler: async (request, h) => {
     const currentTime = new Date(Date.now())
@@ -210,11 +216,113 @@ const readDataverseDeltaController = {
   }
 }
 
+const readDeletedDataVerseController = {
+  handler: async (request, h) => {
+    const currentTime = new Date(Date.now())
+    try {
+      logger.info('Deleted Data Import job starts: ' + currentTime)
+      const { entity } = request.params
+      const getDeletedDisinFectantData = await getDeleteddata(
+        entity,
+        request.db
+      )
+
+      const collections = mongoCollections.DisinfectantDeletedListSI
+
+      let deletedDisinfectantsList = []
+
+      if (getDeletedDisinFectantData != null) {
+        if (getDeletedDisinFectantData.value != null) {
+          deletedDisinfectantsList = getDeletedDisinFectantData.value.map(
+            (item) => {
+              return {
+                name: item.dsf_disinfectantname,
+                id: item.dsf_deleteddisinfectantsid
+              }
+            }
+          )
+        }
+      }
+      const deletedCollection = {
+        deletedDisinfectants: deletedDisinfectantsList,
+        lastModifiedTime: currentTime
+      }
+      logger.info('Deleted data method with values: Mongo Operations')
+      await deleteCollection(request.db, collections)
+
+      await createDocument(request.db, collections, deletedCollection)
+      logger.info(
+        'Deleted data method with values: Mongo Operations ::: Collections dropped and created'
+      )
+      logger.info(
+        'Deleted data method with values: ',
+        getDeletedDisinFectantData
+      )
+      return h.response({ success: getDeletedDisinFectantData })
+    } catch (error) {
+      logger.error('Deleted Data Import Job: ' + error.message + currentTime)
+      return h.response({ error: error.message }).code(errorCode)
+    }
+  }
+}
+
+const readModifiedDataVerseController = {
+  handler: async (request, h) => {
+    const currentTime = new Date(Date.now())
+    try {
+      logger.info('Modified Data Import job starts: ' + currentTime)
+      const { entity } = request.params
+      const getModifiedDisinFectantData = await getModifieddata(
+        entity,
+        request.db
+      )
+
+      const collections = mongoCollections.DisinfectantModifiedListSI
+
+      let modifiedApprovalList = []
+      if (getModifiedDisinFectantData != null) {
+        if (getModifiedDisinFectantData.value != null) {
+          modifiedApprovalList = getModifiedDisinFectantData.value.map(
+            (item) => {
+              return {
+                name: item.dsf_disinfectantname,
+                id: item.dsf_approvalslistsiid
+              }
+            }
+          )
+        }
+      }
+
+      const modifiedCollection = {
+        modifiedApprovalCategories: modifiedApprovalList,
+        lastModifiedTime: currentTime
+      }
+      logger.info('Modified data method with values: Mongo Operations')
+      await deleteCollection(request.db, collections)
+
+      await createDocument(request.db, collections, modifiedCollection)
+      logger.info(
+        'Modified data method with values: Mongo Operations ::: Collections dropped and created'
+      )
+      logger.info(
+        'Modified data method with values: ',
+        getModifiedDisinFectantData
+      )
+      return h.response({ success: getModifiedDisinFectantData })
+    } catch (error) {
+      logger.error('Modified Data Import Job: ' + error.message + currentTime)
+      return h.response({ error: error.message }).code(errorCode)
+    }
+  }
+}
+
 export {
   authController,
   readDataverseController,
   listDBController,
   readDataverseDeltaController,
-  syncData
+  syncData,
+  readDeletedDataVerseController,
+  readModifiedDataVerseController
 }
 /* eslint-enable no-console */

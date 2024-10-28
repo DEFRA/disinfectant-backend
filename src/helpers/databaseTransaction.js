@@ -145,6 +145,16 @@ const updateDocumentInArray = async (db, collectionName, payload) => {
   }
 }
 
+const deleteCollection = async (db, collectionName) => {
+  try {
+    const collection = db.collection(collectionName)
+    await collection.deleteMany()
+  } catch (error) {
+    logger.error(`Failed to delete document in ${collectionName}: ${error}`)
+    throw new Error('Failed to update document')
+  }
+}
+
 export {
   createDocument,
   readAllDocuments,
@@ -153,5 +163,6 @@ export {
   updateDocumentInArray,
   readLatestCollection,
   deleteOlderCollection,
-  readOldCollection
+  readOldCollection,
+  deleteCollection
 }

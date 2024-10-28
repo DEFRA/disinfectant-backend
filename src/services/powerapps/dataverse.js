@@ -8,6 +8,8 @@ const apiBaseUrl = `${resourceUrl}api/data/v9.1`
 const logger = createLogger()
 const additionaParameters = `?$select=dsf_disinfectantname,dsf_companyname,dsf_companyaddress,dsf_chemicalgroups,dsf_fm_approveddilution_formula,dsf_sv_approveddilution_formula,dsf_dp_approveddilution_formula,dsf_tb_approveddilution_formula,dsf_go_approveddilution_formula,dsf_approvalslistsiid`
 
+const additiondeleteParameters = `?$select=dsf_disinfectantname`
+
 const getHeaders = async () => {
   const token = await getAccessToken()
   return {
@@ -88,4 +90,49 @@ const deleteOlderCollection = async (entity, id) => {
   }
 }
 
-export { getData, createData, updateData, deleteOlderCollection }
+const getDeleteddata = async (entity) => {
+  try {
+    const headers = await getHeaders()
+    let response = {}
+
+    response = await fetchProxyWrapper(
+      `${apiBaseUrl}/${entity}${additiondeleteParameters}`,
+      {
+        headers
+      }
+    )
+
+    return response.body
+  } catch (error) {
+    logger.error(`Get Deleted Data failed with error: ${error.message}`)
+    throw error
+  }
+}
+
+const getModifieddata = async (entity) => {
+  try {
+    const headers = await getHeaders()
+    let response = {}
+
+    response = await fetchProxyWrapper(
+      `${apiBaseUrl}/${entity}${additiondeleteParameters}`,
+      {
+        headers
+      }
+    )
+
+    return response.body
+  } catch (error) {
+    logger.error(`Get Modified Data failed with error: ${error.message}`)
+    throw error
+  }
+}
+
+export {
+  getData,
+  createData,
+  updateData,
+  deleteOlderCollection,
+  getDeleteddata,
+  getModifieddata
+}

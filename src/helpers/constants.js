@@ -6,7 +6,9 @@ import disinfectantApprovedListSchema from '../schema/disinfectantApprovedList'
 export const mongoCollections = {
   contact: 'Contact',
   submission: 'Submission',
-  disinfectantApprovedListSI: 'DisinfectantApprovedListSI'
+  disinfectantApprovedListSI: 'DisinfectantApprovedListSI',
+  DisinfectantDeletedListSI: 'DisinfectantDeletedListSI',
+  DisinfectantModifiedListSI: 'DisinfectantModifiedListSI'
 }
 
 export const schemaMapping = {
