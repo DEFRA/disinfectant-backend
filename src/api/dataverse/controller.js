@@ -45,9 +45,10 @@ const syncData = async (entity, request) => {
       .filter((item) => item.dsf_chemicalgroups !== null)
       .map((item) => item.dsf_chemicalgroups.split(';').map((e) => e.trim()))
       .reduce((acc, val) => acc.concat(val), [])
-    const uniqueChemicalGroups = [
+    let uniqueChemicalGroups = [
       ...new Set(combinedChemicalGroups.filter((value) => value.trim() !== ''))
     ]
+    uniqueChemicalGroups = uniqueChemicalGroups.sort()
     // console.log(uniqueChemicalGroups)
     // Code to update property name @odata.deltaLink to deltaLink
     // const odatadeltaLink='@odata.deltaLink'
