@@ -6,9 +6,18 @@ import { createLogger } from '~/src/helpers/logging/logger'
 const resourceUrl = config.get('dataverseUri')
 const apiBaseUrl = `${resourceUrl}api/data/v9.1`
 const logger = createLogger()
+const today = new Date()
+const previousDate = new Date(today)
+const previousDateModified = new Date(today)
+previousDate.setDate(today.getDate() - 180)
+previousDateModified.setDate(today.getDate() - 30)
+const goLiveDate = new Date(today.getFullYear(), 9, 14).toISOString()
+const todayStr = today.toISOString()
+const previousStr = previousDate.toISOString()
+const previousDateModifiedstr = previousDateModified.toISOString()
+const additiondeleteParameters = `?$filter=dsf_deletiondate ge ${previousStr} and dsf_deletiondate le ${todayStr}&$select=dsf_disinfectantname`
 const additionaParameters = `?$select=dsf_disinfectantname,dsf_companyname,dsf_companyaddress,dsf_chemicalgroups,dsf_fm_approveddilution_formula,dsf_sv_approveddilution_formula,dsf_dp_approveddilution_formula,dsf_tb_approveddilution_formula,dsf_go_approveddilution_formula,dsf_approvalslistsiid`
-
-const additiondeleteParameters = `?$select=dsf_disinfectantname`
+const additionupdateParameters = `?$filter=modifiedon ge ${goLiveDate} and modifiedon ge ${previousDateModifiedstr} and modifiedon le ${todayStr}&$select=dsf_disinfectantname`
 
 const getHeaders = async () => {
   const token = await getAccessToken()
@@ -19,6 +28,18 @@ const getHeaders = async () => {
     'OData-MaxVersion': '4.0',
     'OData-Version': '4.0',
     Prefer: 'return=representation,odata.track-changes'
+    // 'Preference-Applied': 'return=representation,odata.track-changes'
+  }
+}
+
+const getDeleteHeaders = async () => {
+  const token = await getAccessToken()
+  return {
+    Authorization: `Bearer ${token}`,
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    'OData-MaxVersion': '4.0',
+    'OData-Version': '4.0'
     // 'Preference-Applied': 'return=representation,odata.track-changes'
   }
 }
@@ -92,7 +113,7 @@ const deleteOlderCollection = async (entity, id) => {
 
 const getDeleteddata = async (entity) => {
   try {
-    const headers = await getHeaders()
+    const headers = await getDeleteHeaders()
     let response = {}
 
     response = await fetchProxyWrapper(
@@ -111,11 +132,11 @@ const getDeleteddata = async (entity) => {
 
 const getModifieddata = async (entity) => {
   try {
-    const headers = await getHeaders()
+    const headers = await getDeleteHeaders()
     let response = {}
 
     response = await fetchProxyWrapper(
-      `${apiBaseUrl}/${entity}${additiondeleteParameters}`,
+      `${apiBaseUrl}/${entity}${additionupdateParameters}`,
       {
         headers
       }
