@@ -48,7 +48,9 @@ const syncData = async (entity, request) => {
     let uniqueChemicalGroups = [
       ...new Set(combinedChemicalGroups.filter((value) => value.trim() !== ''))
     ]
-    uniqueChemicalGroups = uniqueChemicalGroups.sort()
+    uniqueChemicalGroups = uniqueChemicalGroups.sort((a,b) => 
+    a.localeCompare(b, undefined, {sensitivity: 'base'})
+    ) 
     // console.log(uniqueChemicalGroups)
     // Code to update property name @odata.deltaLink to deltaLink
     // const odatadeltaLink='@odata.deltaLink'
@@ -117,7 +119,7 @@ const syncData = async (entity, request) => {
       return newdocument
     }
   } catch (error) {
-    logger.error('Sync data method fails: ' + error.message + currentTime)
+    logger.error(`Sync data method fails:  + ${error.message} + ${currentTime}`)
 
     // logger.info('Sync data method fails: '+error.message + currentTime)
     // h.response({ error: error.message }).code(errorCode)
@@ -135,7 +137,7 @@ const readDataverseController = {
       logger.info('Sync data method with values: ', callSyncData)
       return h.response({ success: callSyncData })
     } catch (error) {
-      logger.error('Daily sync job  fails: ' + error.message + currentTime)
+      logger.error(`Daily sync job  fails: ' + ${error.message} + ${currentTime}`)
       return h.response({ error: error.message }).code(errorCode)
     }
   }
@@ -210,7 +212,7 @@ const readDataverseDeltaController = {
         })
       }
     } catch (error) {
-      logger.error('Delta Sync job ends with: ' + error.message + currentTime)
+      logger.error(`Delta Sync job ends with: ' + ${error.message} + ${currentTime}`)
       // return h.response({ error: error.message }).code(errorCode)
       throw error
     }
@@ -232,8 +234,7 @@ const readDeletedDataVerseController = {
 
       let deletedDisinfectantsList = []
 
-      if (getDeletedDisinFectantData != null) {
-        if (getDeletedDisinFectantData.value != null) {
+      if (getDeletedDisinFectantData && getDeletedDisinFectantData.value ) {
           deletedDisinfectantsList = getDeletedDisinFectantData.value.map(
             (item) => {
               return {
@@ -243,7 +244,7 @@ const readDeletedDataVerseController = {
             }
           )
         }
-      }
+      
       const deletedCollection = {
         deletedDisinfectants: deletedDisinfectantsList,
         lastModifiedTime: currentTime
@@ -261,7 +262,7 @@ const readDeletedDataVerseController = {
       )
       return h.response({ success: getDeletedDisinFectantData })
     } catch (error) {
-      logger.error('Deleted Data Import Job: ' + error.message + currentTime)
+      logger.error(`Deleted Data Import Job: + ${error.message} + ${currentTime}`)
       return h.response({ error: error.message }).code(errorCode)
     }
   }
@@ -281,8 +282,7 @@ const readModifiedDataVerseController = {
       const collections = mongoCollections.DisinfectantModifiedListSI
 
       let modifiedApprovalList = []
-      if (getModifiedDisinFectantData != null) {
-        if (getModifiedDisinFectantData.value != null) {
+      if (getModifiedDisinFectantData && getModifiedDisinFectantData.value) {
           modifiedApprovalList = getModifiedDisinFectantData.value.map(
             (item) => {
               return {
@@ -291,7 +291,6 @@ const readModifiedDataVerseController = {
               }
             }
           )
-        }
       }
 
       const modifiedCollection = {
@@ -311,7 +310,7 @@ const readModifiedDataVerseController = {
       )
       return h.response({ success: getModifiedDisinFectantData })
     } catch (error) {
-      logger.error('Modified Data Import Job: ' + error.message + currentTime)
+      logger.error(`Modified Data Import Job:  + ${error.message} + ${currentTime}`)
       return h.response({ error: error.message }).code(errorCode)
     }
   }
