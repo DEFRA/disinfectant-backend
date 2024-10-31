@@ -51,7 +51,6 @@ const syncData = async (entity, request) => {
     uniqueChemicalGroups = uniqueChemicalGroups.sort((a, b) =>
       a.localeCompare(b, undefined, { sensitivity: 'base' })
     )
-    // console.log(uniqueChemicalGroups)
     // Code to update property name @odata.deltaLink to deltaLink
     // const odatadeltaLink='@odata.deltaLink'
     approvedDisinfectants.deltaLink = approvedDisinfectants[odatadeltaLink]
@@ -59,7 +58,6 @@ const syncData = async (entity, request) => {
     approvedDisinfectants.count = approvedDisinfectants.value.length
     // const newJson=updatedJson
     approvedDisinfectants.chemicalGroups = uniqueChemicalGroups
-    // console.log(newJson.val)
     // Code to update the properties name
     approvedDisinfectants.value.forEach((element) => {
       element.disInfectantName = element.dsf_disinfectantname
