@@ -49,8 +49,7 @@ const syncData = async (entity, request) => {
       ...new Set(combinedChemicalGroups.filter((value) => value.trim() !== ''))
     ]
     uniqueChemicalGroups = uniqueChemicalGroups.sort((a, b) =>
-      a.localeCompare(b, undefined, { sensitivity: 'base' })
-    )
+      a.localeCompare(b, undefined, { sensitivity: 'base' }))
 
     // console.log(uniqueChemicalGroups)
     // Code to update property name @odata.deltaLink to deltaLink
@@ -237,18 +236,10 @@ const readDeletedDataVerseController = {
 
       const collections = mongoCollections.DisinfectantDeletedListSI
 
-      let deletedDisinfectantsList = []
-
-      if (getDeletedDisinFectantData && getDeletedDisinFectantData.value) {
-        deletedDisinfectantsList = getDeletedDisinFectantData.value.map(
-          (item) => {
-            return {
-              name: item.dsf_disinfectantname,
-              id: item.dsf_deleteddisinfectantsid
-            }
-          }
-        )
-      }
+      let deletedDisinfectantsList = getDeletedDisinFectantData?.value?.map(item => ({
+        name: item.dsf_disinfectantname,
+        id: item.dsf_deleteddisinfectantsid
+      })) ?? []
 
       deletedDisinfectantsList = deletedDisinfectantsList.sort((a, b) =>
         a.name.localeCompare(b.name)
@@ -292,15 +283,10 @@ const readModifiedDataVerseController = {
 
       const collections = mongoCollections.DisinfectantModifiedListSI
 
-      let modifiedApprovalList = []
-      if (getModifiedDisinFectantData && getModifiedDisinFectantData.value) {
-        modifiedApprovalList = getModifiedDisinFectantData.value.map((item) => {
-          return {
-            name: item.dsf_disinfectantname,
-            id: item.dsf_approvalslistsiid
-          }
-        })
-      }
+      let modifiedApprovalList = getModifiedDisinFectantData?.value?.map(item => ({
+        name: item.dsf_disinfectantname,
+        id: item.dsf_deleteddisinfectantsid
+      })) ?? []
 
       modifiedApprovalList = modifiedApprovalList.sort((a, b) =>
         a.name.localeCompare(b.name)
