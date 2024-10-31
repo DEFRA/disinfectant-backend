@@ -49,8 +49,8 @@ const syncData = async (entity, request) => {
       ...new Set(combinedChemicalGroups.filter((value) => value.trim() !== ''))
     ]
     uniqueChemicalGroups = uniqueChemicalGroups.sort((a, b) =>
-      a.localeCompare(b, undefined, { sensitivity: 'base' }))
-
+      a.localeCompare(b, undefined, { sensitivity: 'base' })
+    )
     // console.log(uniqueChemicalGroups)
     // Code to update property name @odata.deltaLink to deltaLink
     // const odatadeltaLink='@odata.deltaLink'
@@ -81,7 +81,7 @@ const syncData = async (entity, request) => {
       element.go = element.dsf_go_approveddilution_formula
       delete element.dsf_go_approveddilution_formula
     })
-    // Code to Update propert value to disInfectants
+    // Code to Update property value to disInfectants
     approvedDisinfectants.disInfectants = approvedDisinfectants.value
     delete approvedDisinfectants.value
     approvedDisinfectants.lastModifiedDateAndTime = currentTime
@@ -236,10 +236,11 @@ const readDeletedDataVerseController = {
 
       const collections = mongoCollections.DisinfectantDeletedListSI
 
-      let deletedDisinfectantsList = getDeletedDisinFectantData?.value?.map(item => ({
-        name: item.dsf_disinfectantname,
-        id: item.dsf_deleteddisinfectantsid
-      })) ?? []
+      let deletedDisinfectantsList =
+        getDeletedDisinFectantData?.value?.map((item) => ({
+          name: item.dsf_disinfectantname,
+          id: item.dsf_deleteddisinfectantsid
+        })) ?? []
 
       deletedDisinfectantsList = deletedDisinfectantsList.sort((a, b) =>
         a.name.localeCompare(b.name)
@@ -283,10 +284,11 @@ const readModifiedDataVerseController = {
 
       const collections = mongoCollections.DisinfectantModifiedListSI
 
-      let modifiedApprovalList = getModifiedDisinFectantData?.value?.map(item => ({
-        name: item.dsf_disinfectantname,
-        id: item.dsf_deleteddisinfectantsid
-      })) ?? []
+      let modifiedApprovalList =
+        getModifiedDisinFectantData?.value?.map((item) => ({
+          name: item.dsf_disinfectantname,
+          id: item.dsf_deleteddisinfectantsid
+        })) ?? []
 
       modifiedApprovalList = modifiedApprovalList.sort((a, b) =>
         a.name.localeCompare(b.name)
