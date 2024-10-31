@@ -59,7 +59,8 @@ const syncData = async (entity, request) => {
     // const newJson=updatedJson
     approvedDisinfectants.chemicalGroups = uniqueChemicalGroups
     // Code to update the properties name
-    approvedDisinfectants.value = approvedDisinfectants.value.map(transformDisinfecant)
+    approvedDisinfectants.value =
+      approvedDisinfectants.value.map(transformDisinfecant)
     // Code to Update property value to disInfectants
     approvedDisinfectants.disInfectants = approvedDisinfectants.value
     delete approvedDisinfectants.value
@@ -108,25 +109,25 @@ const syncData = async (entity, request) => {
 
 const transformDisinfecant = (element) => {
   element.disInfectantName = element.dsf_disinfectantname
-      delete element.dsf_disinfectantname
-      element.companyName = element.dsf_companyname
-      delete element.dsf_companyname
-      element.companyAddress = element.dsf_companyaddress
-      delete element.dsf_companyaddress
-      element.chemicalGroups = element.dsf_chemicalgroups
-      delete element.dsf_chemicalgroups
-      element.fmdo = element.dsf_fm_approveddilution_formula
-      delete element.dsf_fm_approveddilution_formula
-      element.svdo = element.dsf_sv_approveddilution_formula
-      delete element.dsf_sv_approveddilution_formula
-      element.dop = element.dsf_dp_approveddilution_formula
-      delete element.dsf_dp_approveddilution_formula
-      element.tbo = element.dsf_tb_approveddilution_formula
-      delete element.dsf_tb_approveddilution_formula
-      element.go = element.dsf_go_approveddilution_formula
-      delete element.dsf_go_approveddilution_formula
+  delete element.dsf_disinfectantname
+  element.companyName = element.dsf_companyname
+  delete element.dsf_companyname
+  element.companyAddress = element.dsf_companyaddress
+  delete element.dsf_companyaddress
+  element.chemicalGroups = element.dsf_chemicalgroups
+  delete element.dsf_chemicalgroups
+  element.fmdo = element.dsf_fm_approveddilution_formula
+  delete element.dsf_fm_approveddilution_formula
+  element.svdo = element.dsf_sv_approveddilution_formula
+  delete element.dsf_sv_approveddilution_formula
+  element.dop = element.dsf_dp_approveddilution_formula
+  delete element.dsf_dp_approveddilution_formula
+  element.tbo = element.dsf_tb_approveddilution_formula
+  delete element.dsf_tb_approveddilution_formula
+  element.go = element.dsf_go_approveddilution_formula
+  delete element.dsf_go_approveddilution_formula
 
-      return element
+  return element
 }
 
 const readDataverseController = {
