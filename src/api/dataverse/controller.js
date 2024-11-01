@@ -48,8 +48,9 @@ const syncData = async (entity, request) => {
     let uniqueChemicalGroups = [
       ...new Set(combinedChemicalGroups.filter((value) => value.trim() !== ''))
     ]
-    uniqueChemicalGroups = uniqueChemicalGroups.sort()
-    // console.log(uniqueChemicalGroups)
+    uniqueChemicalGroups = uniqueChemicalGroups.sort((a, b) =>
+      a.localeCompare(b, undefined, { sensitivity: 'base' })
+    )
     // Code to update property name @odata.deltaLink to deltaLink
     // const odatadeltaLink='@odata.deltaLink'
     approvedDisinfectants.deltaLink = approvedDisinfectants[odatadeltaLink]
@@ -57,29 +58,10 @@ const syncData = async (entity, request) => {
     approvedDisinfectants.count = approvedDisinfectants.value.length
     // const newJson=updatedJson
     approvedDisinfectants.chemicalGroups = uniqueChemicalGroups
-    // console.log(newJson.val)
     // Code to update the properties name
-    approvedDisinfectants.value.forEach((element) => {
-      element.disInfectantName = element.dsf_disinfectantname
-      delete element.dsf_disinfectantname
-      element.companyName = element.dsf_companyname
-      delete element.dsf_companyname
-      element.companyAddress = element.dsf_companyaddress
-      delete element.dsf_companyaddress
-      element.chemicalGroups = element.dsf_chemicalgroups
-      delete element.dsf_chemicalgroups
-      element.fmdo = element.dsf_fm_approveddilution_formula
-      delete element.dsf_fm_approveddilution_formula
-      element.svdo = element.dsf_sv_approveddilution_formula
-      delete element.dsf_sv_approveddilution_formula
-      element.dop = element.dsf_dp_approveddilution_formula
-      delete element.dsf_dp_approveddilution_formula
-      element.tbo = element.dsf_tb_approveddilution_formula
-      delete element.dsf_tb_approveddilution_formula
-      element.go = element.dsf_go_approveddilution_formula
-      delete element.dsf_go_approveddilution_formula
-    })
-    // Code to Update propert value to disInfectants
+    approvedDisinfectants.value =
+      approvedDisinfectants.value.map(transformDisinfecant)
+    // Code to Update property value to disInfectants
     approvedDisinfectants.disInfectants = approvedDisinfectants.value
     delete approvedDisinfectants.value
     approvedDisinfectants.lastModifiedDateAndTime = currentTime
@@ -117,12 +99,35 @@ const syncData = async (entity, request) => {
       return newdocument
     }
   } catch (error) {
-    logger.error('Sync data method fails: ' + error.message + currentTime)
+    logger.error(`Sync data method fails:  + ${error.message} + ${currentTime}`)
 
     // logger.info('Sync data method fails: '+error.message + currentTime)
     // h.response({ error: error.message }).code(errorCode)
     throw error
   }
+}
+
+const transformDisinfecant = (element) => {
+  element.disInfectantName = element.dsf_disinfectantname
+  delete element.dsf_disinfectantname
+  element.companyName = element.dsf_companyname
+  delete element.dsf_companyname
+  element.companyAddress = element.dsf_companyaddress
+  delete element.dsf_companyaddress
+  element.chemicalGroups = element.dsf_chemicalgroups
+  delete element.dsf_chemicalgroups
+  element.fmdo = element.dsf_fm_approveddilution_formula
+  delete element.dsf_fm_approveddilution_formula
+  element.svdo = element.dsf_sv_approveddilution_formula
+  delete element.dsf_sv_approveddilution_formula
+  element.dop = element.dsf_dp_approveddilution_formula
+  delete element.dsf_dp_approveddilution_formula
+  element.tbo = element.dsf_tb_approveddilution_formula
+  delete element.dsf_tb_approveddilution_formula
+  element.go = element.dsf_go_approveddilution_formula
+  delete element.dsf_go_approveddilution_formula
+
+  return element
 }
 
 const readDataverseController = {
@@ -135,7 +140,9 @@ const readDataverseController = {
       logger.info('Sync data method with values: ', callSyncData)
       return h.response({ success: callSyncData })
     } catch (error) {
-      logger.error('Daily sync job  fails: ' + error.message + currentTime)
+      logger.error(
+        `Daily sync job  fails: ' + ${error.message} + ${currentTime}`
+      )
       return h.response({ error: error.message }).code(errorCode)
     }
   }
@@ -210,7 +217,9 @@ const readDataverseDeltaController = {
         })
       }
     } catch (error) {
-      logger.error('Delta Sync job ends with: ' + error.message + currentTime)
+      logger.error(
+        `Delta Sync job ends with: ' + ${error.message} + ${currentTime}`
+      )
       // return h.response({ error: error.message }).code(errorCode)
       throw error
     }
@@ -230,20 +239,16 @@ const readDeletedDataVerseController = {
 
       const collections = mongoCollections.DisinfectantDeletedListSI
 
-      let deletedDisinfectantsList = []
+      let deletedDisinfectantsList =
+        getDeletedDisinFectantData?.value?.map((item) => ({
+          name: item.dsf_disinfectantname,
+          id: item.dsf_deleteddisinfectantsid
+        })) ?? []
 
-      if (getDeletedDisinFectantData != null) {
-        if (getDeletedDisinFectantData.value != null) {
-          deletedDisinfectantsList = getDeletedDisinFectantData.value.map(
-            (item) => {
-              return {
-                name: item.dsf_disinfectantname,
-                id: item.dsf_deleteddisinfectantsid
-              }
-            }
-          )
-        }
-      }
+      deletedDisinfectantsList = deletedDisinfectantsList.sort((a, b) =>
+        a.name.localeCompare(b.name)
+      )
+
       const deletedCollection = {
         deletedDisinfectants: deletedDisinfectantsList,
         lastModifiedTime: currentTime
@@ -261,7 +266,9 @@ const readDeletedDataVerseController = {
       )
       return h.response({ success: getDeletedDisinFectantData })
     } catch (error) {
-      logger.error('Deleted Data Import Job: ' + error.message + currentTime)
+      logger.error(
+        `Deleted Data Import Job: + ${error.message} + ${currentTime}`
+      )
       return h.response({ error: error.message }).code(errorCode)
     }
   }
@@ -280,19 +287,15 @@ const readModifiedDataVerseController = {
 
       const collections = mongoCollections.DisinfectantModifiedListSI
 
-      let modifiedApprovalList = []
-      if (getModifiedDisinFectantData != null) {
-        if (getModifiedDisinFectantData.value != null) {
-          modifiedApprovalList = getModifiedDisinFectantData.value.map(
-            (item) => {
-              return {
-                name: item.dsf_disinfectantname,
-                id: item.dsf_approvalslistsiid
-              }
-            }
-          )
-        }
-      }
+      let modifiedApprovalList =
+        getModifiedDisinFectantData?.value?.map((item) => ({
+          name: item.dsf_disinfectantname,
+          id: item.dsf_deleteddisinfectantsid
+        })) ?? []
+
+      modifiedApprovalList = modifiedApprovalList.sort((a, b) =>
+        a.name.localeCompare(b.name)
+      )
 
       const modifiedCollection = {
         modifiedApprovalCategories: modifiedApprovalList,
@@ -311,7 +314,9 @@ const readModifiedDataVerseController = {
       )
       return h.response({ success: getModifiedDisinFectantData })
     } catch (error) {
-      logger.error('Modified Data Import Job: ' + error.message + currentTime)
+      logger.error(
+        `Modified Data Import Job:  + ${error.message} + ${currentTime}`
+      )
       return h.response({ error: error.message }).code(errorCode)
     }
   }
