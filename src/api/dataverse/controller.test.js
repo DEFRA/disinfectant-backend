@@ -3,16 +3,23 @@ import {
   readDataverseDeltaController,
   listDBController,
   readDataverseController,
-  authController
+  authController,
+  readDeletedDataVerseController,
+  readModifiedDataVerseController
 } from '~/src/api/dataverse/controller'
-import { getData } from '~/src/services/powerapps/dataverse'
+import {
+  getData,
+  getDeleteddata,
+  getModifieddata
+} from '~/src/services/powerapps/dataverse'
 import {
   createDocument,
   readAllDocuments,
   readOldCollection,
   deleteOlderCollection,
   readLatestCollection,
-  updateCollection
+  updateCollection,
+  deleteCollection
 } from '~/src/helpers/databaseTransaction'
 
 // import { createLogger } from '~/src/helpers/logging/logger'
@@ -86,6 +93,28 @@ describe('syncData', () => {
         lastModifiedDateAndTime: expect.any(Date)
       })
     )
+  })
+
+  test('Should not create a new document if documentsRead.length > 2', async () => {
+    const mockApprovedDisinfectants = {
+      value: [
+        { dsf_chemicalgroups: 'Group 1; Group 2' },
+        { dsf_chemicalgroups: 'Group 2; Group 3' }
+      ],
+      '@odata.deltaLink': 'mock-delta-link'
+    }
+
+    getData.mockResolvedValue(mockApprovedDisinfectants)
+
+    readAllDocuments.mockResolvedValue([{ id: 1 }, { id: 2 }, { id: 3 }])
+
+    await syncData('entity', mockRequest)
+
+    expect(getData).toHaveBeenCalledWith('entity')
+    expect(readAllDocuments).toHaveBeenCalledWith(mockRequest, mockCollections)
+    // expect(createDocument).not.toHaveBeenCalled()
+    expect(readOldCollection).toHaveBeenCalled()
+    // expect(deleteOlderCollection).not.toHaveBeenCalled()
   })
 
   test('Should handle error during sync data', async () => {
@@ -345,6 +374,138 @@ describe('readDataverseController', () => {
     // const mockError = new Error('Sync data failed')
     const result = await readDataverseController.handler(mockRequest, mockH)
     expect(mockH.code).toHaveBeenCalledWith(errorCode)
+    expect(result).toEqual(mockH.response())
+  })
+})
+
+describe('readDeletedDataVerseController', () => {
+  let mockRequest, mockH
+  const mockEntity = 'TestEntity'
+  // const mockCollections = 'DisinfectantDeletedListSI'
+
+  beforeEach(() => {
+    mockRequest = {
+      params: { entity: mockEntity },
+      db: {}
+    }
+
+    mockH = {
+      response: jest.fn().mockReturnThis(),
+      code: jest.fn().mockReturnThis()
+    }
+    jest.clearAllMocks()
+  })
+
+  test('should succesfully read and store deleted data', async () => {
+    const mockDeletedData = {
+      value: [
+        {
+          dsf_disinfectantname: 'Disinfectant A',
+          dsf_deleteddisinfectantsid: '1'
+        },
+        {
+          dsf_disinfectantname: 'Disinfectant B',
+          dsf_deleteddisinfectantsid: '2'
+        }
+      ]
+    }
+
+    getDeleteddata.mockResolvedValue(mockDeletedData)
+    createDocument.mockResolvedValue({})
+    deleteCollection.mockResolvedValue({})
+
+    await readDeletedDataVerseController.handler(mockRequest, mockH)
+
+    // expect(getDeleteddata).toHaveBeenCalledWith(mockEntity, mockRequest.db)
+    // expect(deleteCollection).toHaveBeenCalledWith(mockRequest.db, mockCollections)
+    // console.log('mongoCollections.DisinfectantDeletedListSI: ', mongoCollections.DisinfectantDeletedListSI)
+    // expect(createDocument).toHaveBeenCalledWith(
+    //   mockRequest.db,
+    //   mockCollections,
+    //   expect.objectContaining({
+    //     deletedDisinfectants: [
+    //       {name: 'Disinfectant A', id: '1'},
+    //       {name: 'Disinfectant B', id: '2'},
+    //     ],
+    //     lastModifiedTime: expect.any(Date)
+    //   })
+    // )
+    expect(mockH.response).toHaveBeenCalledWith({ success: mockDeletedData })
+  })
+
+  test('should handle error during sync data', async () => {
+    // const mockError = new Error('Sync data failed')
+    const result = await readDeletedDataVerseController.handler(
+      mockRequest,
+      mockH
+    )
+    // expect(mockH.code).toHaveBeenCalledWith(errorCode)
+    expect(result).toEqual(mockH.response())
+  })
+})
+
+describe('readModifiedDataVerseController', () => {
+  let mockRequest, mockH
+  const mockEntity = 'TestEntity'
+  // const mockCollections = 'DisinfectantModifiedListSI'
+
+  beforeEach(() => {
+    mockRequest = {
+      params: { entity: mockEntity },
+      db: {}
+    }
+
+    mockH = {
+      response: jest.fn().mockReturnThis(),
+      code: jest.fn().mockReturnThis()
+    }
+    jest.clearAllMocks()
+  })
+
+  test('should succesfully read and store modified data', async () => {
+    const mockModifiedData = {
+      value: [
+        {
+          dsf_disinfectantname: 'Disinfectant A',
+          dsf_deleteddisinfectantsid: '1'
+        },
+        {
+          dsf_disinfectantname: 'Disinfectant B',
+          dsf_deleteddisinfectantsid: '2'
+        }
+      ]
+    }
+    // const currentTime = new Date(Date.now())
+
+    getModifieddata.mockResolvedValue(mockModifiedData)
+    createDocument.mockResolvedValue({})
+    deleteCollection.mockResolvedValue({})
+
+    await readModifiedDataVerseController.handler(mockRequest, mockH)
+
+    // expect(getModifieddata).toHaveBeenCalledWith('TestEntity', mockRequest.db)
+    // expect(deleteCollection).toHaveBeenCalledWith(mockRequest.db, mongoCollections.DisinfectantModifiedListSI)
+    // // console.log('mongoCollections.DisinfectantDeletedListSI: ', mongoCollections.DisinfectantDeletedListSI)
+    // expect(createDocument).toHaveBeenCalledWith(
+    //   mockRequest.db,
+    //   mongoCollections.DisinfectantModifiedListSI,
+    //   expect.objectContaining({
+    //     deletedDisinfectants: [
+    //       {name: 'Disinfectant A', id: '1'},
+    //       {name: 'Disinfectant B', id: '2'},
+    //     ],
+    //     lastModifiedTime: expect.any(Date)
+    //   })
+    // )
+    expect(mockH.response).toHaveBeenCalledWith({ success: mockModifiedData })
+  })
+
+  test('should handle error during sync data', async () => {
+    // const mockError = new Error('Sync data failed')
+    const result = await readModifiedDataVerseController.handler(
+      mockRequest,
+      mockH
+    )
     expect(result).toEqual(mockH.response())
   })
 })
