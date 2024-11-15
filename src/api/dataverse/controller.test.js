@@ -231,6 +231,22 @@ describe('readDataverseDeltaController', () => {
     )
   })
 
+  test('should handle delta sync job without update if latestCollection = 0', async () => {
+    const mockLatestCollection = []
+    readLatestCollection.mockResolvedValue(mockLatestCollection)
+
+    await readDataverseDeltaController.handler(mockRequest, mockH)
+
+    expect(readLatestCollection).toHaveBeenCalledWith(
+      mockRequest.db,
+      mongoCollections.disinfectantApprovedListSI
+    )
+
+    expect(mockH.response).toHaveBeenCalledWith({
+      message: 'Delta Sync job ends without update:'
+    })
+  })
+
   test('should handle delta sync job with updates in sync data', async () => {
     const mockLatestCollection = []
     const mockApprovedDisinfectants = {
@@ -433,6 +449,16 @@ describe('readDeletedDataVerseController', () => {
     expect(mockH.response).toHaveBeenCalledWith({ success: mockDeletedData })
   })
 
+  test('should catch error during sync data', async () => {
+    const mockError = new Error('Sync data failed')
+    getDeleteddata.mockRejectedValue(mockError)
+
+    await readDeletedDataVerseController.handler(mockRequest, mockH)
+
+    expect(mockH.response).toHaveBeenCalledWith({ error: 'Sync data failed' })
+    expect(mockH.code).toHaveBeenCalledWith(errorCode)
+  })
+
   test('should handle error during sync data', async () => {
     // const mockError = new Error('Sync data failed')
     const result = await readDeletedDataVerseController.handler(
@@ -498,6 +524,18 @@ describe('readModifiedDataVerseController', () => {
     //   })
     // )
     expect(mockH.response).toHaveBeenCalledWith({ success: mockModifiedData })
+  })
+
+  test('should catch error during modified data import', async () => {
+    const mockError = new Error('Modified data import failed')
+    getModifieddata.mockRejectedValue(mockError)
+
+    await readModifiedDataVerseController.handler(mockRequest, mockH)
+
+    expect(mockH.response).toHaveBeenCalledWith({
+      error: 'Modified data import failed'
+    })
+    expect(mockH.code).toHaveBeenCalledWith(errorCode)
   })
 
   test('should handle error during sync data', async () => {
