@@ -136,7 +136,7 @@ const getModifieddata = async (entity) => {
     const previousDateModified = new Date(today)
     previousDate.setDate(today.getDate() - 180)
     previousDateModified.setDate(today.getDate() - 30)
-    const goLiveDate = new Date(today.getFullYear(), 9, 23).toISOString()
+    const goLiveDate = new Date(today.getFullYear(), 10, 14).toISOString()
     const todayStr = today.toISOString()
     const previousDateModifiedstr = previousDateModified.toISOString()
 
