@@ -1,6 +1,7 @@
 import {
   authController,
   listDBController,
+  listDBControllerWithParameter,
   readDataverseController,
   readDataverseDeltaController,
   readDeletedDataVerseController,
@@ -22,6 +23,14 @@ const dataverse = {
           path: '/list/{collection}',
           ...listDBController
         },
+
+        {
+          method: 'GET',
+          path: '/getDisinfectants/{filter}',
+          ...listDBControllerWithParameter
+        },
+
+
         {
           method: 'GET',
           path: '/dataverse-read/{entity}',
