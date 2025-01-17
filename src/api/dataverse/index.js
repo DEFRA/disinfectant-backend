@@ -30,7 +30,6 @@ const dataverse = {
           ...listDBControllerWithParameter
         },
 
-
         {
           method: 'GET',
           path: '/dataverse-read/{entity}',
