@@ -162,6 +162,30 @@ const listDBController = {
     }
   }
 }
+
+const listDBControllerWithParameter = {
+  handler: async (request, h) => {
+    const collection = 'disinfectantApprovedListSI'
+    const { filter } = request.params
+    try {
+      const documents = await readLatestCollection(
+        request.db,
+        mongoCollections[collection]
+      )
+      const filteredDisinfectants = documents.map((item) =>
+        item.disInfectants
+          .filter((disInfectant) => disInfectant[filter] > 1)
+          .map((disInfectant) => disInfectant.disInfectantName)
+      )
+      return h
+        .response({ message: 'success', filteredDisinfectants })
+        .code(successCode)
+    } catch (error) {
+      return h.response({ error: error.message }).code(errorCode)
+    }
+  }
+}
+
 const readDataverseDeltaController = {
   handler: async (request, h) => {
     const currentTime = new Date(Date.now())
@@ -329,6 +353,7 @@ export {
   readDataverseDeltaController,
   syncData,
   readDeletedDataVerseController,
-  readModifiedDataVerseController
+  readModifiedDataVerseController,
+  listDBControllerWithParameter
 }
 /* eslint-enable no-console */
