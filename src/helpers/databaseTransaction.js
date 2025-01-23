@@ -124,6 +124,7 @@ const getFilteredDocuments = async (documents, filter) => {
           return newValue > 1 || disInfectant[filter] === 'Undiluted'
         })
         .map((disInfectant) => disInfectant.disInfectantName)
+        .sort((a, b) => a.localeCompare(b))
     )
     return filteredDisinfectants
   } catch (error) {
