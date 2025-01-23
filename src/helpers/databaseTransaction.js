@@ -121,7 +121,7 @@ const getFilteredDocuments = async (documents, filter) => {
         .filter((disInfectant) => {
           const originalValue = disInfectant[filter]
           const newValue = parseFloat(originalValue)
-          return newValue > 1
+          return newValue > 1 || disInfectant[filter] === 'Undiluted'
         })
         .map((disInfectant) => disInfectant.disInfectantName)
     )
