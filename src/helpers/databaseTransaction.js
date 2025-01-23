@@ -118,7 +118,11 @@ const getFilteredDocuments = async (documents, filter) => {
   try {
     const filteredDisinfectants = documents.map((item) =>
       item.disInfectants
-        .filter((disInfectant) => disInfectant[filter] > 0)
+        .filter((disInfectant) => {
+          const originalValue = disInfectant[filter]
+          const newValue = parseFloat(originalValue)
+          return newValue > 1
+        })
         .map((disInfectant) => disInfectant.disInfectantName)
     )
     return filteredDisinfectants
