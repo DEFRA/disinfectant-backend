@@ -5,7 +5,8 @@ import {
   readDataverseController,
   authController,
   readDeletedDataVerseController,
-  readModifiedDataVerseController
+  readModifiedDataVerseController,
+  listDBControllerWithParameter
 } from '~/src/api/dataverse/controller'
 import {
   getData,
@@ -19,7 +20,8 @@ import {
   deleteOlderCollection,
   readLatestCollection,
   updateCollection,
-  deleteCollection
+  deleteCollection,
+  getFilteredDocuments
 } from '~/src/helpers/databaseTransaction'
 
 // import { createLogger } from '~/src/helpers/logging/logger'
@@ -340,6 +342,72 @@ describe('listDBController', () => {
     expect(readLatestCollection).toHaveBeenCalledWith(
       mockRequest.db,
       mongoCollections[mockRequest.params.collection]
+    )
+    expect(mockH.response).toHaveBeenCalledWith({
+      error: mockError.message
+    })
+    expect(mockH.code).toHaveBeenCalledWith(errorCode)
+  })
+})
+
+describe('listDBControllerWithParameter', () => {
+  let mockRequest, mockServer
+
+  const mockH = {
+    response: jest.fn().mockReturnThis(),
+    code: jest.fn().mockReturnThis()
+  }
+
+  beforeEach(() => {
+    mockServer = {
+      db: {
+        collection: jest.fn().mockReturnValue({
+          find: jest.fn().mockReturnValue({
+            toArray: jest.fn().mockResolvedValue([{ _id: '123', data: 'test' }])
+          })
+        })
+      }
+    }
+    mockRequest = {
+      query: { type: 'fmdo' },
+      params: { entity: 'DisinfectantApprovedListSI' },
+      db: mockServer.db
+    }
+
+    jest.clearAllMocks()
+  })
+
+  test('should return success response with documents', async () => {
+    const mockDocuments = [{ _id: '123', data: 'test' }]
+    // const approvedDocuments = [{ disInfectantName: 'abc' }]
+    readLatestCollection.mockResolvedValue(mockDocuments)
+    const filter = 'fmdo'
+
+    await listDBControllerWithParameter.handler(mockRequest, mockH)
+
+    expect(readLatestCollection).toHaveBeenCalledWith(
+      mockRequest.db,
+      mongoCollections.disinfectantApprovedListSI
+    )
+
+    expect(getFilteredDocuments).toHaveBeenCalledWith(mockDocuments, filter)
+
+    expect(mockH.response).toHaveBeenCalledWith({
+      message: 'success'
+      // filteredDisinfectants: approvedDocuments
+    })
+    expect(mockH.code).toHaveBeenCalledWith(successCode)
+  })
+
+  test('should return error response with error message', async () => {
+    const mockError = new Error('Some error')
+    readLatestCollection.mockRejectedValue(mockError)
+
+    await listDBControllerWithParameter.handler(mockRequest, mockH)
+
+    expect(readLatestCollection).toHaveBeenCalledWith(
+      mockRequest.db,
+      mongoCollections.disinfectantApprovedListSI
     )
     expect(mockH.response).toHaveBeenCalledWith({
       error: mockError.message

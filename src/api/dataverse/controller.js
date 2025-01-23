@@ -9,7 +9,8 @@ import {
   readOldCollection,
   deleteOlderCollection,
   updateCollection,
-  deleteCollection
+  deleteCollection,
+  getFilteredDocuments
 } from '~/src/helpers/databaseTransaction'
 import {
   getData,
@@ -166,17 +167,19 @@ const listDBController = {
 const listDBControllerWithParameter = {
   handler: async (request, h) => {
     const collection = 'disinfectantApprovedListSI'
-    const { filter } = request.params
+    // const { filter } = request.query
+    const { type } = request.query
     try {
       const documents = await readLatestCollection(
         request.db,
         mongoCollections[collection]
       )
-      const filteredDisinfectants = documents.map((item) =>
-        item.disInfectants
-          .filter((disInfectant) => disInfectant[filter] > 1)
-          .map((disInfectant) => disInfectant.disInfectantName)
-      )
+      // const filteredDisinfectants = documents.map((item) =>
+      //   item.disInfectants
+      //     .filter((disInfectant) => disInfectant[type] > 0)
+      //     .map((disInfectant) => disInfectant.disInfectantName)
+      // )
+      const filteredDisinfectants = await getFilteredDocuments(documents, type)
       return h
         .response({ message: 'success', filteredDisinfectants })
         .code(successCode)

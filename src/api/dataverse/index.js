@@ -26,7 +26,7 @@ const dataverse = {
 
         {
           method: 'GET',
-          path: '/getDisinfectants/{filter}',
+          path: '/getApprovedDisinfectants',
           ...listDBControllerWithParameter
         },
 

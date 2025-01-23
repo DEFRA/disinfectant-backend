@@ -114,6 +114,19 @@ const readLatestCollection = async (db, collectionName) => {
     throw new Error('Failed to read document from readLatestCollection')
   }
 }
+const getFilteredDocuments = async (documents, filter) => {
+  try {
+    const filteredDisinfectants = documents.map((item) =>
+      item.disInfectants
+        .filter((disInfectant) => disInfectant[filter] > 0)
+        .map((disInfectant) => disInfectant.disInfectantName)
+    )
+    return filteredDisinfectants
+  } catch (error) {
+    logger.error(`Failed to read document from ${documents}: ${error}`)
+    throw new Error('Failed to read document from getFilteredDocuments')
+  }
+}
 const updateDocumentInArray = async (db, collectionName, payload) => {
   try {
     const collection = db.collection(collectionName)
@@ -164,5 +177,6 @@ export {
   readLatestCollection,
   deleteOlderCollection,
   readOldCollection,
-  deleteCollection
+  deleteCollection,
+  getFilteredDocuments
 }
