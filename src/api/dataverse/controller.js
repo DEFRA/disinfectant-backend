@@ -181,7 +181,7 @@ const listDBControllerWithParameter = {
       // )
       const filteredDisinfectants = await getFilteredDocuments(documents, type)
       return h
-        .response({ message: 'success', filteredDisinfectants })
+        .response({ message: 'success', type: type, filteredDisinfectants })
         .code(successCode)
     } catch (error) {
       return h.response({ error: error.message }).code(errorCode)
