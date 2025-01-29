@@ -116,17 +116,22 @@ const readLatestCollection = async (db, collectionName) => {
 }
 const getFilteredDocuments = async (documents, filter) => {
   try {
+    const filterValue = filter
     const filteredDisinfectants = documents.map((item) =>
       item.disInfectants
         .filter((disInfectant) => {
           const originalValue = disInfectant[filter]
           const newValue = parseFloat(originalValue)
-          return newValue > 1 || disInfectant[filter] === 'Undiluted'
+          return newValue > 0 || disInfectant[filter] === 'Undiluted'
         })
-        .map((disInfectant) => disInfectant.disInfectantName)
-        .sort((a, b) => a.localeCompare(b))
+        // .map(disInfectant => (disInfectant.disInfectantName))
+        .map((disInfectant) => ({
+          Disinfectant_name: disInfectant.disInfectantName,
+          Approved_dilution_rate: disInfectant[filterValue]
+        }))
+        .sort((a, b) => a.Disinfectant_name.localeCompare(b.Disinfectant_name))
     )
-    return filteredDisinfectants
+    return filteredDisinfectants.flat()
   } catch (error) {
     logger.error(`Failed to read document from ${documents}: ${error}`)
     throw new Error('Failed to read document from getFilteredDocuments')

@@ -393,7 +393,8 @@ describe('listDBControllerWithParameter', () => {
     expect(getFilteredDocuments).toHaveBeenCalledWith(mockDocuments, filter)
 
     expect(mockH.response).toHaveBeenCalledWith({
-      message: 'success'
+      message: 'success',
+      type: 'fmdo'
       // filteredDisinfectants: approvedDocuments
     })
     expect(mockH.code).toHaveBeenCalledWith(successCode)
