@@ -62,14 +62,14 @@ const config = convict({
     format: String,
     nullable: true,
     default: null,
-    env: 'CDP_HTTP_PROXY'
+    env: 'HTTP_PROXY'
   },
   httpsProxy: {
     doc: 'HTTPS Proxy',
     format: String,
     nullable: true,
     default: null,
-    env: 'CDP_HTTPS_PROXY'
+    env: 'HTTP_PROXY'
   },
   azTenantId: {
     doc: 'The azure tenant ID',
