@@ -181,7 +181,7 @@ const listDBControllerWithParameter = {
       // )
       const filteredDisinfectants = await getFilteredDocuments(documents, type)
       return h
-        .response({ message: 'success', type: type, filteredDisinfectants })
+        .response({ message: 'success', type, filteredDisinfectants })
         .code(successCode)
     } catch (error) {
       return h.response({ error: error.message }).code(errorCode)
@@ -266,15 +266,15 @@ const readDeletedDataVerseController = {
 
       const collections = mongoCollections.DisinfectantDeletedListSI
 
-      let deletedDisinfectantsList =
+      const deletedDisinfectantsList =
         getDeletedDisinFectantData?.value?.map((item) => ({
           name: item.dsf_disinfectantname,
           id: item.dsf_deleteddisinfectantsid
         })) ?? []
 
-      deletedDisinfectantsList = deletedDisinfectantsList.sort((a, b) =>
-        a.name.localeCompare(b.name)
-      )
+      // deletedDisinfectantsList = deletedDisinfectantsList.sort((a, b) =>
+      //   a.name.localeCompare(b.name)
+      // )
 
       const deletedCollection = {
         deletedDisinfectants: deletedDisinfectantsList,
@@ -314,15 +314,15 @@ const readModifiedDataVerseController = {
 
       const collections = mongoCollections.DisinfectantModifiedListSI
 
-      let modifiedApprovalList =
+      const modifiedApprovalList =
         getModifiedDisinFectantData?.value?.map((item) => ({
           name: item.dsf_disinfectantname,
           id: item.dsf_deleteddisinfectantsid
         })) ?? []
 
-      modifiedApprovalList = modifiedApprovalList.sort((a, b) =>
-        a.name.localeCompare(b.name)
-      )
+      // modifiedApprovalList = modifiedApprovalList.sort((a, b) =>
+      //   a.name.localeCompare(b.name)
+      // )
 
       const modifiedCollection = {
         modifiedApprovalCategories: modifiedApprovalList,
