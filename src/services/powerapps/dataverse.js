@@ -106,7 +106,7 @@ const getDeleteddata = async (entity) => {
     const today = new Date()
     const previousDate = new Date(today)
     const previousDateModified = new Date(today)
-    previousDate.setDate(today.getDate() - 180)
+    previousDate.setDate(today.getDate() - 30)
     previousDateModified.setDate(today.getDate() - 30)
     const todayStr = today.toISOString()
     const previousStr = previousDate.toISOString()
@@ -134,13 +134,13 @@ const getModifieddata = async (entity) => {
     const today = new Date()
     const previousDate = new Date(today)
     const previousDateModified = new Date(today)
-    previousDate.setDate(today.getDate() - 180)
+    previousDate.setDate(today.getDate() - 30)
     previousDateModified.setDate(today.getDate() - 30)
-    const goLiveDate = new Date(today.getFullYear(), 10, 14).toISOString()
+    // const goLiveDate = new Date(today.getFullYear(), 10, 14).toISOString()
     const todayStr = today.toISOString()
     const previousDateModifiedstr = previousDateModified.toISOString()
 
-    const additionupdateParameters = `?$filter=modifiedon ge ${goLiveDate} and modifiedon ge ${previousDateModifiedstr} and modifiedon le ${todayStr}&$select=dsf_disinfectantname`
+    const additionupdateParameters = `?$filter=modifiedon ge ${previousDateModifiedstr} and modifiedon le ${todayStr}&$select=dsf_disinfectantname`
 
     const headers = await getDeleteHeaders()
     let response = {}
